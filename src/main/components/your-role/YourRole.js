@@ -49,7 +49,6 @@ class YourRole extends React.Component {
     render() {
         return (
             <div>
-                <Navbar/>
                 <Paper className="ContentBox" color="text.primary" elevation={3}>
                     <Typography variant="h3" id="roleName"> {this.state.roleName} </Typography>
                     <Typography variant="subtitle1" id="desc"> {this.state.description} </Typography>

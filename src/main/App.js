@@ -10,43 +10,50 @@ import AccountDirectorSpace from "./components/account-director-space/AccountDir
 import ProjectManagerSpace from "./components/project-manager-space/ProjectManagerSpace";
 import NotFound from "./components/not-found/NotFound";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import {makeStyles} from "@material-ui/core/styles";
+
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
 import Header from "./components/shared/header/Header";
 import Footer from "./components/shared/footer/Footer";
+import Navbar from "./components/shared/nav-bar/Navbar";
+
+const theme = createMuiTheme({
+    typography: {
+        fontFamily: 'Ubuntu Light'
+    }
+});
 
 class App extends React.Component {
 
     render() {
         return (
-            <div>
-                <div id="main">
+            <ThemeProvider theme={theme}>
 
-
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <Header/>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Router>
-                                <Switch>
-                                    <Route exact path="/" component={Home}/>
-                                    <Route exact path="/YourRole" component={YourRole}/>
-                                    <Route exact path="/FindRoles" component={FindRoles}/>
-                                    <Route exact path="/Login" component={Login}/>
-                                    <Route exact path="/AccountDirectorSpace" component={AccountDirectorSpace}/>
-                                    <Route exact path="/ProjectManagerSpace" component={ProjectManagerSpace}/>
-                                    <Route path="*" exact={true} component={NotFound}/>
-                                </Switch>
-                            </Router>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Footer/>
-                        </Grid>
+                <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                        <Header/>
                     </Grid>
-                </div>
-            </div>
-
+                    <Grid item xs={3}>
+                        <Navbar/>
+                    </Grid>
+                    <Grid item xs={8}>
+                        <Router>
+                            <Switch>
+                                <Route exact path="/" component={Home}/>
+                                <Route exact path="/YourRole" component={YourRole}/>
+                                <Route exact path="/FindRoles" component={FindRoles}/>
+                                <Route exact path="/Login" component={Login}/>
+                                <Route exact path="/AccountDirectorSpace" component={AccountDirectorSpace}/>
+                                <Route exact path="/ProjectManagerSpace" component={ProjectManagerSpace}/>
+                                <Route path="*" exact={true} component={NotFound}/>
+                            </Switch>
+                        </Router>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Footer/>
+                    </Grid>
+                </Grid>
+            </ThemeProvider>
         );
     }
 }

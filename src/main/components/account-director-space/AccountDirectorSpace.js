@@ -4,7 +4,6 @@ import Navbar from "../shared/nav-bar/Navbar";
 function AccountDirectorSpace(props) {
     return (
         <div>
-            <Navbar/>
             <div>Account Director Space</div>
         </div>
     )
