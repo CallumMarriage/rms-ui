@@ -1,7 +1,7 @@
 import React from 'react';
 import {Route, Redirect} from 'react-router-dom';
 
-export default function AdminRoute({ component: C, appProps, ...rest }) {
+export default function ProjectManagerRoute({ component: C, appProps, ...rest }) {
     return (
         <Route
             {...rest}

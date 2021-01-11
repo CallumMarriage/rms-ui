@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         color: 'white',
         position: "fixed",
-        backgroundColor: '#0070AD',
+        backgroundColor: '#2B0A3D',
         bottom: 0,
         lef:0
     },

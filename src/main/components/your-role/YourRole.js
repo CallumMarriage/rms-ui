@@ -1,65 +1,152 @@
 import React from 'react';
+import {connect} from "react-redux";
 
-import './YourRole.css';
-
+import Grid from "@material-ui/core/Grid";
+import {Typography} from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
-import {Typography} from '@material-ui/core';
+import withStyles from "@material-ui/core/styles/withStyles";
+import {retrieveResourceManagerName} from "../../services/userService";
+import Button from "@material-ui/core/Button";
 
-import {retrieveRoleInfo} from './dao/roleDao';
-import {retrieveAccountInfo} from './dao/accountDao'
-import Navbar from "../shared/nav-bar/Navbar";
+
+const StyledButton = withStyles({
+    root: {
+        border: 'solid 2px #0070AD',
+        backgroundColor: '#0070AD',
+        margin: '10px',
+        width: '90%',
+        "&:hover": {
+            backgroundColor: "#12ABDB"
+        }
+    },
+    disabled: {
+        border: 'solid 2px lightgrey',
+        backgroundColor: 'lightgrey',
+        margin: '10px',
+        width: '90%',
+        "&:hover": {
+            backgroundColor: "lightgrey"
+        }
+    }
+
+})(Button)
+
+
+const PrimaryTyp = withStyles({
+    root: {
+        color: 'white',
+        padding: '10px',
+        fontSize: '1em'
+    }
+})(Typography)
+
+const SecondaryHeaderTyp = withStyles({
+    root: {
+        color: '#0070AD',
+        padding: '10px',
+        fontSize: '1.5em'
+
+    }
+})(Typography)
 
 class YourRole extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            roleName: null,
-            accountNumber: null,
-            projectCode: null,
-            startDate: null,
-            endDate: null,
-            description: null,
-            accountName: null
+            currentRole: null,
+            currentAccount: null,
+            currentProject: null,
+            currentResourceManager: null
         };
     }
 
     async componentDidMount() {
-        let roleInfo = await retrieveRoleInfo();
-        if (roleInfo === undefined || roleInfo === null){
+        console.log(this.props.user)
+        if (this.props.user.resourceManagerId == null) {
             return;
         }
-        if (roleInfo.accountNumber !== null) {
-            let accountInfo = await retrieveAccountInfo(roleInfo.accountNumber);
-            if(accountInfo === undefined || accountInfo.accountCode === undefined){
-                return;
-            }
-            this.setState({
-                roleName: roleInfo.roleName,
-                accountNumber: roleInfo.accountNumber,
-                projectCode: roleInfo.projectCode,
-                startDate: roleInfo.startDate,
-                endDate: roleInfo.endDate,
-                description: roleInfo.description,
-                accountName: accountInfo.accountName
-            })
+
+        const response = await retrieveResourceManagerName(
+            this.props.user.resourceManagerId);
+
+        if (response.hasError) {
+            return
         }
+
+        this.setState({
+            currentResourceManager: response.id
+        })
     }
 
     render() {
+        let project = this.props.currentProject;
+        let account = this.props.currentAccount;
+        let role = this.props.role;
+
         return (
-            <div>
-                <Paper className="ContentBox" color="text.primary" elevation={3}>
-                    <Typography variant="h3" id="roleName"> {this.state.roleName} </Typography>
-                    <Typography variant="subtitle1" id="desc"> {this.state.description} </Typography>
-                    <p> Start Date: {this.state.startDate} </p>
-                    <p> Expected End Date: {this.state.endDate} </p>
-                    <p> {this.state.accountNumber} </p>
-                    <p> {this.state.projectCode} </p>
-                </Paper>
-            </div>
-        );
+            <Paper style={{width: '80%', margin: 'auto', marginTop: '50px', padding: '30px', marginBottom: '50px'}}>
+                <SecondaryHeaderTyp>
+                    Here you can find out all your current information
+                </SecondaryHeaderTyp>
+                {returnInfo(project, account, role, this.state.currentResourceManager)}
+            </Paper>
+        )
     }
 }
 
-export default YourRole;
+function returnInfo(project, account, role, resourceManager) {
+    return (
+        <Grid container style={{marginBottom: '20px'}}>
+            <Grid item xs={4}>
+                {retrieveButton(role, 'Your Current Role')}
+            </Grid>
+            <Grid item xs={4}>
+                {retrieveButton(project, 'Current Project')}
+            </Grid>
+            <Grid item xs={4}>
+                {retrieveButton(account, 'Current Account')}
+            </Grid>
+            <Grid item xs={4}>
+                {retrieveButton(resourceManager, 'Your Resource Manager')}
+            </Grid>
+        </Grid>
+    )
+}
+
+function retrieveButton(data, content) {
+    console.log(data)
+    if (data == null) {
+        return (
+            <StyledButton disable={true}>
+                <PrimaryTyp variant={"h4"}>
+                    {
+                        content
+                    }
+                </PrimaryTyp>
+            </StyledButton>
+        )
+    } else {
+        return (
+            <StyledButton>
+                <PrimaryTyp variant={"h4"}>
+                    {
+                        content
+                    }
+                </PrimaryTyp>
+            </StyledButton>
+        )
+    }
+}
+
+const mapStateToProps = (state) => {
+    console.log(state)
+    return {
+        user: state.auth.user,
+        currentRole: state.auth.currentRole,
+        currentAccount: state.auth.currentAccount,
+        currentProject: state.auth.currentProject
+    };
+}
+
+export default connect(mapStateToProps)(YourRole);

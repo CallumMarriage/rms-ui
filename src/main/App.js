@@ -1,61 +1,86 @@
 import React from 'react';
 
 import './App.css';
-import YourRole from './components/your-role/YourRole';
-import {BrowserRouter as Router, Link, Route, Switch} from "react-router-dom";
-import Home from "./components/home/Home";
-import FindRoles from "./components/find-roles/FindRoles";
-import Login from "./components/login/Login";
-import AccountDirectorSpace from "./components/account-director-space/AccountDirectorSpace";
-import ProjectManagerSpace from "./components/project-manager-space/ProjectManagerSpace";
-import NotFound from "./components/not-found/NotFound";
+import {BrowserRouter as Router} from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import {createMuiTheme, ThemeProvider} from '@material-ui/core/styles';
+
+import {connect} from 'react-redux';
 
 import Header from "./components/shared/header/Header";
 import Footer from "./components/shared/footer/Footer";
 import Navbar from "./components/shared/nav-bar/Navbar";
+import MyRouter from "./router/Router";
 
 const theme = createMuiTheme({
     typography: {
-        fontFamily: 'Ubuntu Light'
-    }
+        fontFamily: 'Ubuntu'
+    },
+    palette: {
+        primary: {
+            main: '#0070AD',
+        },
+        secondary: {
+            main: '#12ABDB',
+        }
+    },
 });
 
 class App extends React.Component {
 
     render() {
         return (
-            <ThemeProvider theme={theme}>
+            <div className="App">
+                <ThemeProvider theme={theme}>
 
-                <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                        <Header/>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <Navbar/>
-                    </Grid>
-                    <Grid item xs={8}>
+                    <Grid container spacing={3}>
                         <Router>
-                            <Switch>
-                                <Route exact path="/" component={Home}/>
-                                <Route exact path="/YourRole" component={YourRole}/>
-                                <Route exact path="/FindRoles" component={FindRoles}/>
-                                <Route exact path="/Login" component={Login}/>
-                                <Route exact path="/AccountDirectorSpace" component={AccountDirectorSpace}/>
-                                <Route exact path="/ProjectManagerSpace" component={ProjectManagerSpace}/>
-                                <Route path="*" exact={true} component={NotFound}/>
-                            </Switch>
+                            <Grid item xs={12}>
+                                <Header/>
+                            </Grid>
+                            {renderPage(this.props)}
+                            <Grid item xs={12}>
+                                <Footer/>
+                            </Grid>
                         </Router>
                     </Grid>
-                    <Grid item xs={12}>
-                        <Footer/>
-                    </Grid>
-                </Grid>
-            </ThemeProvider>
+                </ThemeProvider>
+            </div>
         );
     }
 }
 
-export default App;
+function renderPage(props){
+    if(props.isSignedIn){
+        return (
+            <Grid container spacing={0}>
+                <Grid item xs={3}>
+                    <Navbar/>
+                </Grid>
+
+                <Grid item xs={9}>
+                    { RenderRouter(props) }
+                </Grid>
+            </Grid>
+        );
+    }
+}
+
+function RenderRouter(props){
+    if(!props.loading){
+        return (<MyRouter isSignedIn={props.isSignedIn}/>)
+    } else {
+        return (<div>loading...</div>)
+    }
+}
+
+
+const mapStateToProps = (state) => {
+    return {
+        isSignedIn: state.auth.isSignedIn,
+        loading: state.auth.loading
+    };
+}
+
+export default connect(mapStateToProps )(App);

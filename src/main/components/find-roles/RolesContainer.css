@@ -1,0 +1,8 @@
+.rolesContainer {
+    width: 100%;
+    min-height: 350px;
+    max-height: 1500px;
+    overflow: auto;
+    margin-top: 10px;
+    margin-bottom: 70px;
+}

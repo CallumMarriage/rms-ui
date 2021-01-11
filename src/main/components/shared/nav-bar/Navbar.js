@@ -2,67 +2,88 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import NavbarOption from "./NavbarOption";
 import Paper from "@material-ui/core/Paper";
-import makeStyles from "@material-ui/core/styles/makeStyles";
 import HomeIcon from '@material-ui/icons/Home';
 import ViewListIcon from '@material-ui/icons/ViewList';
+import {LocalGroceryStore} from "@material-ui/icons";
+import EmailIcon from '@material-ui/icons/Email';
+import {connect} from "react-redux";
+import withStyles from "@material-ui/core/styles/withStyles";
+import {retrieveNumOfApplications} from "../../../services/applicationService";
 
-const useStyles = makeStyles((theme) => ({
+const styles = theme => ({
     root: {
         flexGrow: 1,
     },
     paper: {
         textAlign: 'center',
-        color: theme.palette.text.secondary,
-        width: '80%',
-        marginLeft: '30px',
-        marginTop: '20px',
-        height: '600px'
+        backgroundColor: '#0070AD',
+        fontcolor: 'white',
+        width: '60%',
+        marginLeft: '60px',
+        marginTop: '60px',
+        height: '500px'
     }
-}));
+});
 
 
-function Navbar(props) {
+class Navbar extends React.Component {
 
-    const classes = useStyles();
+    constructor(props) {
+        super(props);
 
-    return (
+        this.state = {
+            numOfApps: 0
+        };
+    }
 
-        <Paper className={classes.paper}>
-            <Grid container spacing={3}>
-                <NavbarOption link={"/"}
-                              icon={HomeIcon}
-                              title={"Home Page"}
-                              number={0}/>
 
-                <NavbarOption link="/YourRole"
-                              icon={ViewListIcon}
-                              title={"Past Roles"}
-                              number={0}/>
+    async componentDidMount() {
+        const userId = this.props.userId;
 
-            </Grid>
-        </Paper>
+        if (userId === undefined || userId == null) {
+            return;
+        }
+        const res = await retrieveNumOfApplications(userId);
 
-        // <ul>
-        //     <li>
-        //         <div>
-        //             <Button href="/">Home Page</Button>
-        //             <div>0</div>
-        //         </div>
-        //     </li>
-        //     <li>
-        //         <Button href="/YourRole">Your Role</Button>
-        //     </li>
-        //     <li>
-        //         <Button href="/FindRoles">Find Roles</Button>
-        //     </li>
-        //     <li>
-        //         <Button href="/AccountDirectorSpace">Account Director</Button>
-        //     </li>
-        //     <li>
-        //         <Button href="/ProjectManagerSpace">Project Management</Button>
-        //     </li>
-        // </ul>
-    )
+        this.setState({
+            numOfApps: res.numOfApplications
+        })
+    }
+
+    render() {
+
+        const numOfApps = this.state.numOfApps
+
+        return (
+            <Paper className={this.props.classes.paper}>
+                <Grid container spacing={2}>
+                    <NavbarOption link={"/"}
+                                  icon={HomeIcon}
+                                  title={"Home Page"}/>
+
+                    <NavbarOption link="/MyCapgeminiCV"
+                                  icon={ViewListIcon}
+                                  title={"My Capgemini CV"}/>
+
+                    <NavbarOption link="/FindRoles"
+                                  icon={LocalGroceryStore}
+                                  title={"Find a new Role"}/>
+
+                    <NavbarOption link="/MyApplications"
+                                  icon={EmailIcon}
+                                  title={"My Applications"}
+                                  number={numOfApps}/>
+
+                </Grid>
+            </Paper>
+        )
+    }
 }
 
-export default Navbar;
+const mapStateToProps = (state) => {
+    return {
+        userId: state.auth.userId
+    };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(Navbar));
