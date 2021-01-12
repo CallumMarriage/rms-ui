@@ -12,6 +12,8 @@ import MyApplications from "../components/my-applications/MyApplications";
 import ViewRole from "../components/pages/ViewRole";
 import Account from "../components/pages/Account";
 import Project from "../components/pages/Project";
+import AddNewRole from "../components/my-cap-cv/add-new-role/AddNewRole";
+import SearchAccounts from "../components/search-accounts/SearchAccounts";
 
 export default function MyRouter(props){
     return(
@@ -31,6 +33,30 @@ export default function MyRouter(props){
                 />
                 {/*<Route exact path="/Login" component={Login}/>*/}
                 <EmployeeRoute exact path="/MyCapgeminiCV"
+                               component={MyCapgeminiCv}
+                               appProps={{
+                                   isSignedIn: props.isSignedIn
+                               }}
+                />
+                <EmployeeRoute exact path="/MeetOurResourceManagers"
+                               component={MyCapgeminiCv}
+                               appProps={{
+                                   isSignedIn: props.isSignedIn
+                               }}
+                />
+                <EmployeeRoute exact path="/AddNewRole"
+                               component={AddNewRole}
+                               appProps={{
+                                   isSignedIn: props.isSignedIn
+                               }}
+                />
+                <EmployeeRoute exact path="/SearchAccounts"
+                               component={SearchAccounts}
+                               appProps={{
+                                   isSignedIn: props.isSignedIn
+                               }}
+                />
+                <EmployeeRoute exact path="/ResourceManager/:id"
                                component={MyCapgeminiCv}
                                appProps={{
                                    isSignedIn: props.isSignedIn

@@ -12,6 +12,7 @@ import Header from "./components/shared/header/Header";
 import Footer from "./components/shared/footer/Footer";
 import Navbar from "./components/shared/nav-bar/Navbar";
 import MyRouter from "./router/Router";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const theme = createMuiTheme({
     typography: {
@@ -39,7 +40,13 @@ class App extends React.Component {
                             <Grid item xs={12}>
                                 <Header/>
                             </Grid>
-                            {renderPage(this.props)}
+                            <Grid container spacing={0}>
+                                <Grid item xs={3}>
+                                    <Navbar/>
+                                </Grid>
+                                {renderPage(this.props)}
+
+                            </Grid>
                             <Grid item xs={12}>
                                 <Footer/>
                             </Grid>
@@ -51,24 +58,24 @@ class App extends React.Component {
     }
 }
 
-function renderPage(props){
-    if(props.isSignedIn){
+function renderPage(props) {
+    if (props.isSignedIn) {
         return (
-            <Grid container spacing={0}>
-                <Grid item xs={3}>
-                    <Navbar/>
-                </Grid>
-
-                <Grid item xs={9}>
-                    { RenderRouter(props) }
-                </Grid>
+            <Grid item xs={9}>
+                {RenderRouter(props)}
             </Grid>
         );
+    } else if (props.loading) {
+        return (
+            <Grid item xs={8}>
+                <CircularProgress style={{margin: 'auto'}}/>
+            </Grid>
+        )
     }
 }
 
-function RenderRouter(props){
-    if(!props.loading){
+function RenderRouter(props) {
+    if (!props.loading) {
         return (<MyRouter isSignedIn={props.isSignedIn}/>)
     } else {
         return (<div>loading...</div>)
@@ -83,4 +90,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps )(App);
+export default connect(mapStateToProps)(App);

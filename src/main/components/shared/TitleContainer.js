@@ -2,7 +2,7 @@ import {Typography} from "@material-ui/core";
 import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 
-import "./FindRoles.css"
+import "./TitleContainer.css"
 
 const TitleTyp = withStyles({
     root: {
@@ -14,12 +14,12 @@ const TitleTyp = withStyles({
 })(Typography)
 
 
-export default function FindRolesTitleContainer() {
+export default function TitleContainer(props) {
 
     return (
         <div className={"titleContainer"}>
             <TitleTyp variant={"h4"}>
-                Find new Roles
+                {props.title}
             </TitleTyp>
         </div>
     )

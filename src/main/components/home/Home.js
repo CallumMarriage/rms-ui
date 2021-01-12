@@ -6,9 +6,10 @@ import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {Typography} from "@material-ui/core";
 
-import YourRole from "../your-role/YourRole";
+import YourRole from "./YourRole";
 
 import "./Home.css";
+import TitleContainer from "../shared/TitleContainer";
 
 const HomeTitleTyp = withStyles({
     root: {
@@ -43,11 +44,7 @@ class Home extends React.Component {
 
         return (
             <Grid container style={{marginBottom: '40px'}}>
-                <div className={"homeTitleContainer"}>
-                    <HomeTitleTyp variant={"h4"}>
-                        Your Home Page
-                    </HomeTitleTyp>
-                </div>
+                <TitleContainer title={"My Home Screen"}/>
                 <Grid item xs={12}>
                     <Paper>
                         <Grid container>

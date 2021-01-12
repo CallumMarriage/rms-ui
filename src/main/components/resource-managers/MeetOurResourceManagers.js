@@ -9,7 +9,7 @@ import {Button} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 
 import RolesContainer from "./RolesContainer";
-import TitleContainer from "../shared/TitleContainer";
+import FindRolesTitleContainer from "./TitleContainer";
 import { retrievePotentialRoles } from "../../services/roleService";
 
 import Error from "../shared/Error";
@@ -21,44 +21,15 @@ class FindRoles extends React.Component {
         super(props);
 
         this.state = {
-            potentialRoles: [],
-            filterActive: false,
-            filteredPotentialRoles: [],
-            loading: true,
-            amount: 10,
-            searchItem: '',
-            searching: true,
-            hasError: false,
-            error: null
+            resourceManagers: []
         };
     }
 
-    handleChange = (e) => {
-        this.setState({
-            [e.target.name]: e.target.value,
-            filterActive: true
-        });
-        this.submitSearch(e.target.value);
-    };
-
-    submitSearch(searchItem) {
-        this.setState(
-            {searching: true}
-        )
-
-    }
-
-    resetFilter() {
-        this.setState({
-            filterActive: false
-        })
-    }
 
     async componentDidMount() {
-        const userId = this.props.userId;
 
-        const res = await retrievePotentialRoles(userId, 10);
-        this.setState({potentialRoles: []})
+        const res = await retrieveResourceManagers();
+        this.setState({resourceManagers: []})
 
         if (res == null) {
             this.setState({
@@ -67,11 +38,12 @@ class FindRoles extends React.Component {
         } else if (res.hasError) {
             this.setState({
                 hasError: true,
+                loading: false,
                 error: res.error
             })
         } else {
             this.setState({
-                potentialRoles: res.potentialRoles,
+                resourceManagers: res.resourceManagers,
                 loading: false,
                 searching: false
             })
@@ -99,7 +71,7 @@ class FindRoles extends React.Component {
         const userId = this.props.userId;
         return (
             <Grid container>
-                <TitleContainer title={'Find new roles'}/>
+                <FindRolesTitleContainer/>
 
                 <Grid item xs={4}>
                     <Paper style={{width: '90%'}}>

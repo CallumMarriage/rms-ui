@@ -9,6 +9,8 @@ import EmailIcon from '@material-ui/icons/Email';
 import {connect} from "react-redux";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {retrieveNumOfApplications} from "../../../services/applicationService";
+import SearchIcon from '@material-ui/icons/Search';
+
 
 const styles = theme => ({
     root: {
@@ -38,12 +40,11 @@ class Navbar extends React.Component {
 
 
     async componentDidMount() {
-        const userId = this.props.userId;
-
-        if (userId === undefined || userId == null) {
+        if(this.props.user == null){
             return;
         }
-        const res = await retrieveNumOfApplications(userId);
+
+        const res = await retrieveNumOfApplications(this.props.user.id);
 
         this.setState({
             numOfApps: res.numOfApplications
@@ -53,36 +54,46 @@ class Navbar extends React.Component {
     render() {
 
         const numOfApps = this.state.numOfApps
+        if(this.props.isSignedIn){
+            return (
+                <Paper className={this.props.classes.paper}>
+                    <Grid container spacing={2}>
+                        <NavbarOption link={"/"}
+                                      icon={HomeIcon}
+                                      title={"Home Page"}/>
 
-        return (
-            <Paper className={this.props.classes.paper}>
-                <Grid container spacing={2}>
-                    <NavbarOption link={"/"}
-                                  icon={HomeIcon}
-                                  title={"Home Page"}/>
+                        <NavbarOption link="/MyCapgeminiCV"
+                                      icon={ViewListIcon}
+                                      title={"My Capgemini CV"}/>
 
-                    <NavbarOption link="/MyCapgeminiCV"
-                                  icon={ViewListIcon}
-                                  title={"My Capgemini CV"}/>
+                        <NavbarOption link="/FindRoles"
+                                      icon={LocalGroceryStore}
+                                      title={"Find a new Role"}/>
 
-                    <NavbarOption link="/FindRoles"
-                                  icon={LocalGroceryStore}
-                                  title={"Find a new Role"}/>
+                        <NavbarOption link="/SearchAccounts"
+                                      icon={SearchIcon}
+                                      title={"Search Accounts"}/>
 
-                    <NavbarOption link="/MyApplications"
-                                  icon={EmailIcon}
-                                  title={"My Applications"}
-                                  number={numOfApps}/>
+                        <NavbarOption link="/MyApplications"
+                                      icon={EmailIcon}
+                                      title={"My Applications"}
+                                      number={numOfApps}/>
 
-                </Grid>
-            </Paper>
-        )
+                    </Grid>
+                </Paper>
+            )
+        } else {
+            return (
+                <div/>
+            )
+        }
     }
 }
 
 const mapStateToProps = (state) => {
     return {
-        userId: state.auth.userId
+        user: state.auth.user,
+        isSignedIn: state.auth.isSignedIn
     };
 }
 

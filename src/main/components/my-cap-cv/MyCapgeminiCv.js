@@ -6,20 +6,39 @@ import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {Typography} from "@material-ui/core";
 
-import Role from "../pages/Role";
+import Role from "../find-roles/Role";
 import Error from "../shared/Error";
 import {retrieveRoleHistory} from "../../services/roleHistoryService";
 
 import './MyCapgeminiCv.css';
+import TitleContainer from "../shared/TitleContainer";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import CustomizedTimeline from "./Timeline";
+import {Link} from "react-router-dom";
+import Button from "@material-ui/core/Button";
 
-const MyCapCvTitle = withStyles({
+const StyledButton = withStyles({
     root: {
-        color: "white",
-        align: 'center',
-        height: '100%',
-        margin: 'auto'
+        border: 'solid 2px #0070AD',
+        backgroundColor: '#0070AD',
+        color: 'white',
+        margin: '10px',
+        width: '90%',
+        "&:hover": {
+            backgroundColor: "#12ABDB"
+        }
     }
-})(Typography)
+})(Button)
+
+const StyledPaper = withStyles({
+    root: {
+        border: 'solid 2px #0070AD',
+        backgroundColor: 'lightgrey',
+        margin: 'auto',
+        padding: '10px',
+        width: '60%',
+    }
+})(Paper)
 
 class MyCapgeminiCv extends React.Component {
     constructor(props) {
@@ -36,12 +55,12 @@ class MyCapgeminiCv extends React.Component {
         const userId = this.props.userId;
 
         const res = await retrieveRoleHistory(userId);
-
+        console.log(res)
         if (res == null) {
             this.setState({
                 loading: false
             })
-        } else if (res.hasError){
+        } else if (res.hasError) {
             this.setState({
                 hasError: true,
                 error: res.error
@@ -56,56 +75,63 @@ class MyCapgeminiCv extends React.Component {
     }
 
     render() {
-
-        if (this.state.loading) {
-            return (<div/>)
-        }
-
-        if(this.state.hasError) {
-            return (
-                <Error/>
-            )
-        }
-
-
-        const roleHistory = this.state.roleHistory;
-
-        if(roleHistory === undefined || roleHistory.length === 0){
-            return (
-                <Paper>
-                    <h3>
-                        You have no past roles.
-                    </h3>
-                </Paper>
-            );
-        }
-
-
         return (
             <Grid container>
+                <TitleContainer title={"My Capgemini CV"}/>
                 <Grid item xs={12}>
-                    <div className={"capCvTitleContainer"}>
-                        <MyCapCvTitle variant={"h6"}>
-                            Your Home Page
-                        </MyCapCvTitle>
+                    <div style={{marginTop: '20px', marginBottom: '20px'}}>
+                        <Paper>
+                            <Grid container>
+                                <Grid item xs={12}>
+                                    <div style={{marginTop: '20px', marginBottom: '20px'}}>
+                                        <Typography variant={"h5"}>
+                                            Welcome to your Capgemini CV
+                                        </Typography>
+                                    </div>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Typography variant={"subtitle1"}>
+                                        Here you can search through your journey at Capgemini.
+                                        Each stage has a link to the role you were on at that timee.
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <div style={{margin: '10px'}}>
+
+                                        <Typography variant={"h6"}>
+                                            If you think that your history is incomplete click on the below button to
+                                            add a
+                                            new role.
+                                        </Typography>
+                                        <Link to={'/AddNewRole'} style={{textDecoration: 'none'}}>
+                                            <StyledButton>
+                                                Add a new role to your Capgemini CV
+                                            </StyledButton>
+                                        </Link>
+                                        <StyledPaper>
+                                            <Typography variant={"subtitle1"}>
+                                                Before you add your role make sure you have the account and project code for
+                                                the
+                                                project that you were on.
+                                            </Typography>
+                                            <div style={{marginTop: '10px'}}>
+                                                <Typography variant={"subtitle2"}>
+                                                    Account details can be found here <Link
+                                                    to={"/SearchAccounts"}>Capgemini Accounts</Link>
+                                                </Typography>
+                                            </div>
+                                        </StyledPaper>
+                                    </div>
+                                </Grid>
+                            </Grid>
+                        </Paper>
                     </div>
                 </Grid>
                 <Grid item xs={12}>
                     <Paper>
-                        {roleHistory.map(role => {
-                            console.log(role)
-                            return (
-                                <Role projectName={role.projectName}
-                                      projectCode={role.projectCode}
-                                      accountName={role.accountName}
-                                      accountNumber={role.accountNumber}
-                                      roleName={role.roleName}
-                                      description={role.description}
-                                      startDate={role.startDate}
-                                      endDate={role.endDate}
-                                />
-                            )
-                        })}
+                        {
+                            renderRoleHistory(this.state.loading, this.state.hasError, this.state.roleHistory)
+                        }
                     </Paper>
                 </Grid>
             </Grid>
@@ -113,9 +139,51 @@ class MyCapgeminiCv extends React.Component {
     }
 }
 
+function renderRoleHistory(loading, hasError, roleHistory) {
+    if (loading) {
+        return (
+            <CircularProgress style={{marginTop: '20px'}}/>
+        )
+    }
+
+    if (hasError) {
+        return (
+            <Error/>
+        )
+    }
+
+    if (roleHistory !== undefined && roleHistory.length !== 0) {
+        return (
+            <Paper style={{
+                width: '100%',
+                minHeight: '350px',
+                maxHeight: '400px',
+                overflow: 'auto',
+                marginBottom: '100px'
+            }}>
+                <CustomizedTimeline roleHistory={roleHistory}/>
+            </Paper>
+        );
+    } else {
+        return (
+            <Paper style={{
+                width: '100%',
+                minHeight: '350px',
+                maxHeight: '400px',
+                overflow: 'auto',
+                marginBottom: '100px'
+            }}>
+
+            </Paper>
+        )
+    }
+}
+
+
 const mapStateToProps = (state) => {
+    console.log(state)
     return {
-        userId: state.auth.userId,
+        userId: state.auth.user.id,
     };
 }
 

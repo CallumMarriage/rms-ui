@@ -1,4 +1,4 @@
-import Role from "../pages/Role";
+import Role from "./Role";
 import Paper from "@material-ui/core/Paper";
 import React from "react";
 

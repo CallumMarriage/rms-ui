@@ -7,6 +7,7 @@ import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {retrieveResourceManagerName} from "../../services/userService";
 import Button from "@material-ui/core/Button";
+import {Link} from "react-router-dom";
 
 
 const StyledButton = withStyles({
@@ -28,9 +29,22 @@ const StyledButton = withStyles({
             backgroundColor: "lightgrey"
         }
     }
-
 })(Button)
 
+const StyledPaper = withStyles({
+    root: {
+        margin: '20px',
+        width: '100%',
+        padding: '10px',
+        border: 'solid 5px green'
+    }
+})(Paper)
+
+const ErrorStyledPaper = withStyles({
+    root: {
+        border: 'solid 5px red'
+    }
+})(StyledPaper)
 
 const PrimaryTyp = withStyles({
     root: {
@@ -96,16 +110,75 @@ class YourRole extends React.Component {
 }
 
 function returnInfo(project, account, role, resourceManager) {
+
+    if (role === null || role === undefined) {
+        return (
+            <Grid container style={{marginBottom: '20px'}}>
+                <Grid item xs={12}>
+                    <Typography variant={"h6"}>
+                        You are not currently assigned to a project.
+                    </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                    <Button>
+                        <StyledPaper>
+                            <Typography variant={"h6"}>
+                                Starting looking now
+                            </Typography>
+                            <Link to={"/FindRoles"} style={{textDecoration: 'none'}}>
+                                <Typography variant={"subtitle1"}>
+                                    To get started you can find available roles here!
+                                </Typography>
+                            </Link>
+                        </StyledPaper>
+                    </Button>
+                </Grid>
+                <Grid item xs={6}>
+                    <Button>
+                        <ErrorStyledPaper>
+                            <Typography variant={"h6"}>
+                                Is your project missing?
+                            </Typography>
+                            <Link to={"/MyCapgeminiCv"} style={{textDecoration: 'none'}}>
+                                <Typography variant={"subtitle1"}>
+                                    If your current project is not being shown you can find instructions here on how to make
+                                    sure our system is up to date.
+                                </Typography>
+                            </Link>
+                        </ErrorStyledPaper>
+                    </Button>
+                </Grid>
+            </Grid>
+        )
+    }
+
     return (
         <Grid container style={{marginBottom: '20px'}}>
             <Grid item xs={4}>
-                {retrieveButton(role, 'Your Current Role')}
+                {
+                    retrieveButton(
+                        role,
+                        'Your Current Role',
+                        `Account/${role.accountNumber}/Project/${role.projectCode}/ViewRole/${role.id}`,
+                        {role: role}
+                    )
+                }
             </Grid>
             <Grid item xs={4}>
-                {retrieveButton(project, 'Current Project')}
+                {
+                    retrieveButton(project,
+                        'Current Project',
+                        `Account/${role.accountNumber}/Project/${role.projectCode}`,
+                        {project: project}
+                    )
+                }
             </Grid>
             <Grid item xs={4}>
-                {retrieveButton(account, 'Current Account')}
+                {retrieveButton(account,
+                    'Current Account',
+                    `Account/${role.accountNumber}`,
+                    {account: account}
+                )}
             </Grid>
             <Grid item xs={4}>
                 {retrieveButton(resourceManager, 'Your Resource Manager')}
@@ -114,20 +187,13 @@ function returnInfo(project, account, role, resourceManager) {
     )
 }
 
-function retrieveButton(data, content) {
-    console.log(data)
-    if (data == null) {
-        return (
-            <StyledButton disable={true}>
-                <PrimaryTyp variant={"h4"}>
-                    {
-                        content
-                    }
-                </PrimaryTyp>
-            </StyledButton>
-        )
-    } else {
-        return (
+function retrieveButton(data, content, path, state) {
+
+    return (
+        <Link to={{
+            pathname: path,
+            state: state
+        }}>
             <StyledButton>
                 <PrimaryTyp variant={"h4"}>
                     {
@@ -135,8 +201,9 @@ function retrieveButton(data, content) {
                     }
                 </PrimaryTyp>
             </StyledButton>
-        )
-    }
+        </Link>
+    )
+
 }
 
 const mapStateToProps = (state) => {

@@ -22,7 +22,7 @@ export default function Header(props){
     return (
         <Paper className={classes.paper}>
             <span>
-                <img src={logo} alt="Logo" style={{ "width": "240px", "height": "60px"}}/>
+                <img src={logo} alt="Logo" style={{ "width": "280px", "height": "60px"}}/>
             </span>
             <GoogleAuth/>
         </Paper>

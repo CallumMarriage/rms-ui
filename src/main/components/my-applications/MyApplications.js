@@ -7,6 +7,9 @@ import {retrieveApplications} from "../../services/applicationService";
 
 import Application from "./Application";
 import Error from "../shared/Error";
+import TitleContainer from "../shared/TitleContainer";
+import Grid from "@material-ui/core/Grid";
+import {Typography} from "@material-ui/core";
 
 class MyApplications extends React.Component {
     constructor(props) {
@@ -20,18 +23,18 @@ class MyApplications extends React.Component {
     }
 
     async componentDidMount() {
-        const userId = this.props.userId;
+        const userId = this.props.user.id;
         const res = await retrieveApplications(userId);
-        console.log(res)
         this.setState({potentialRoles: []})
         if (res == null) {
             this.setState({
                 loading: false
             })
-        } else if (res.hasError){
+        } else if (res.hasError) {
             this.setState({
                 hasError: true,
-                error: res.error
+                error: res.error,
+                loading: false
             })
         } else {
             this.setState({
@@ -44,24 +47,39 @@ class MyApplications extends React.Component {
 
     render() {
 
-        if (this.state.loading) {
-            return (
-                <Paper style={{width: '100%', minHeight: '350px', maxHeight: '400px', overflow: 'auto'}}>
-                    <CircularProgress style={{marginTop: '20px'}}/>
-                </Paper>
-            )
-        }
-
-        if(this.state.hasError){
-            return (
-                <Error/>
-            )
-        }
-
-        const applications = this.state.applications;
-
         return (
-            <Paper>
+            <Grid container style={{marginBottom: '40px'}}>
+                <TitleContainer title={'My Applications'}/>
+                <Paper style={{width: '100%', minHeight: '350px', maxHeight: '400px', overflow: 'auto'}}>
+                    {renderApplicationContainer(this.state.loading, this.state.hasError, this.state.applications)}
+                </Paper>
+            </Grid>
+
+        )
+    }
+}
+
+function renderApplicationContainer(loading, hasError, applications) {
+    if (loading) {
+        return (
+            <CircularProgress style={{marginTop: '20px'}}/>
+        )
+    } else if (hasError) {
+        return (
+            <Error/>
+        )
+    } else if (applications.length === 0) {
+        return (
+            <div>
+                <Typography variant={"h6"}>
+                    You have no applications.
+                </Typography>
+            </div>
+        )
+    }
+    {
+        return (
+            <div>
                 {
                     applications.map(application => {
                         return (
@@ -74,14 +92,15 @@ class MyApplications extends React.Component {
                         )
                     })
                 }
-            </Paper>
+            </div>
         )
     }
+
 }
 
 const mapStateToProps = (state) => {
     return {
-        userId: state.auth.userId,
+        user: state.auth.user,
     };
 }
 

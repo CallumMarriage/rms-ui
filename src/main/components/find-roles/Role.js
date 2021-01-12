@@ -9,7 +9,7 @@ import Button from "@material-ui/core/Button";
 
 import {ThemeProvider} from "styled-components";
 
-import AccountImage from "./AccountImage";
+import AccountImage from "../pages/AccountImage";
 
 const theme = createMuiTheme({
     typography: {
@@ -50,7 +50,7 @@ export default function Role(props) {
                         <AccountImage accountNumber={props.accountNumber}/>
 
                         <Grid item xs={12} style={{border: 'solid 1px #0070AD'}}>
-                            <Link to={{
+                            <Link style={{textDecoration: 'none'}} to={{
                                 pathname: `/Account/${props.accountNumber}`,
                                 state: {account: props}
                             }}>
@@ -64,7 +64,7 @@ export default function Role(props) {
 
                         <Grid item xs={12} style={{border: 'solid 1px green'}}>
 
-                            <Link to={{
+                            <Link style={{textDecoration: 'none'}} to={{
                                 pathname: `/Account/${props.accountNumber}/Project/${props.projectCode}`,
                                 state: {project: props}
                             }}>
@@ -79,7 +79,7 @@ export default function Role(props) {
 
                     <Grid item xs={8} style={{height: 'match-parent', background: '#ECECEC'}}>
 
-                        <Link to={{
+                        <Link style={{textDecoration: 'none'}} to={{
                             pathname: `/Account/${props.accountNumber}/Project/${props.projectCode}/ViewRole/${props.id}`,
                             state: {role: props}
                         }}>
