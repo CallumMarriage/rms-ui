@@ -12,6 +12,7 @@ export async function uploadImageFile(accountId, file) {
 
         return await accessImagePost(`/image`, body)
     } catch (e) {
+        console.log(e)
         return error
     }
 }
@@ -21,7 +22,7 @@ export async function retrieveImageFile(accountId) {
         console.log('Making GET image request to Account API')
 
         let image = await accessImageGet(`/image?accountId=${accountId}`)
-        return image.responseBody;
+        return image.base64Image;
     } catch (e) {
         return error
     }

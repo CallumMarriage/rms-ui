@@ -5,8 +5,7 @@ export async function retrieveRoleHistory(id) {
     try {
         console.log('Making request to Role API')
         let res = await accessApiGet(`/roles?userId=${id}`);
-
-        if (res.responseBody.rolehistory === undefined) {
+        if (res.responseBody.potentialRoles === undefined) {
             return {
                 roleHistory: []
             }

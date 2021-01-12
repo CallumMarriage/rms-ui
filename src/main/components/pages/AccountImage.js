@@ -14,13 +14,12 @@ class AccountImage extends React.Component {
 
     async componentDidMount() {
         const res = await retrieveImageFile(this.props.accountNumber);
-
-        if (res.hasError) {
+        if (res === undefined || res.hasError) {
             return;
         }
 
         this.setState({
-            image: res.base64Image,
+            image: res,
         })
     }
 

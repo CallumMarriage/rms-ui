@@ -6,6 +6,10 @@ import Application from "../my-applications/Application";
 import {retrieveAllAccounts} from "../../services/accountService";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Error from "../shared/Error";
+import AccountImage from "../pages/AccountImage";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import AccountItem from "./AccountItem";
 
 class SearchAccounts extends React.Component {
 
@@ -25,13 +29,14 @@ class SearchAccounts extends React.Component {
         })
         const res = await retrieveAllAccounts();
 
-        if(res.hasError){
+        console.log(res);
+
+        if (res.hasError) {
             this.setState({
                 loading: false,
                 hasError: true
             })
         } else {
-            console.log('here')
             this.setState({
                 loading: false,
                 accountList: res.accountList
@@ -53,31 +58,29 @@ class SearchAccounts extends React.Component {
     }
 }
 
-function renderAccounts(loading, hasError, accountList){
+function renderAccounts(loading, hasError, accountList) {
 
-    if(loading){
+    if (loading) {
         return (
             <CircularProgress style={{marginTop: '20px'}}/>
         )
     }
-    if(hasError){
+    if (hasError) {
         return (
             <Error/>
         )
     }
 
-    return(
-        <div>
+    return (
+        <Grid container>
             {
                 accountList.map(account => {
                     return (
-                        <div className={'row'} key={account.accountNumber}>
-                            <p>{account.accountName}</p>
-                        </div>
+                        <AccountItem account={account}/>
                     )
                 })
             }
-        </div>
+        </Grid>
     )
 }
 

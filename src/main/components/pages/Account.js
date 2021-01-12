@@ -14,11 +14,15 @@ class Account extends React.Component {
         super(props);
         this.state = {
             image: null,
-            account: props.location.state.account,
+            accountNumber: props.location.state.accountNumber,
             fileToUpload: null,
             base64: null,
             updating: false
         }
+    }
+
+    componentDidMount() {
+
     }
 
     onChange(e) {
@@ -49,17 +53,21 @@ class Account extends React.Component {
 
     async uploadImage() {
         const uploaded = await uploadImageFile(
-            this.state.account.accountNumber,
+            this.state.accountNumber,
             this.state.fileToUpload)
 
-        if (uploaded.hasError) {
+        console.log(uploaded)
+
+        if (uploaded === undefined) {
+            this.setState({
+                updating: false
+            })
             return;
         }
+        if (uploaded.hasError) {
+            alert('Failed to upload image')
+        }
 
-        this.setState({
-            updating: false
-        })
-        await this.componentDidMount();
     }
 
     render() {
@@ -96,7 +104,10 @@ class Account extends React.Component {
         } else {
             return (
                 <Paper>
-                    <AccountImage accountNumber={this.state.account.accountNumber}/>
+                    <AccountImage accountNumber={this.state.accountNumber}/>
+                    <Button onClick={this.setUpdating.bind(this)}>
+                        Update the account image
+                    </Button>
                 </Paper>
             )
         }

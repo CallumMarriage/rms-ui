@@ -5,34 +5,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
-import {FormControl} from "@material-ui/core";
-
-const roleTypes = [
-    {
-        value: 'SoftwareEngineer',
-        label: 'Software Engineer'
-    },
-    {
-        value: 'Tester',
-        label: 'Tester'
-    },
-    {
-        value: 'ProjectManager',
-        label: 'Project Manager'
-    },
-    {
-        value: 'BusinessAnalyst',
-        label: 'Business Analyst'
-    },
-    {
-        value: 'Researcher',
-        label: 'Researcher'
-    },
-    {
-        value: 'Other',
-        label: 'Other'
-    }
-]
+import {getRoleTypes} from "../../shared/RoleTypes";
 
 class AddNewRole extends React.Component {
     constructor(props) {
@@ -43,7 +16,7 @@ class AddNewRole extends React.Component {
             endDate: null,
             roleName: null,
             roleDescription: null,
-            roleType: roleTypes[0].value,
+            roleType: getRoleTypes()[0].value,
             projectCode: null,
             accountNumber: null
         };
@@ -75,7 +48,7 @@ class AddNewRole extends React.Component {
                         helperText="Please select from the list what closest matches your role"
                         variant="outlined"
                     >
-                        {roleTypes.map((option) => (
+                        {getRoleTypes().map((option) => (
                             <MenuItem key={option.value} value={option.value}>
                                 {option.label}
                             </MenuItem>

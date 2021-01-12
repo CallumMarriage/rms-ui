@@ -52,7 +52,7 @@ export default function Role(props) {
                         <Grid item xs={12} style={{border: 'solid 1px #0070AD'}}>
                             <Link style={{textDecoration: 'none'}} to={{
                                 pathname: `/Account/${props.accountNumber}`,
-                                state: {account: props}
+                                state: {accountNumber: props.accountNumber}
                             }}>
                                 <StyledButton>
                                     <WhiteTypo variant="h5" color="secondary">

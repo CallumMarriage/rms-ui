@@ -19,6 +19,7 @@ export default function RolesContainer (props) {
                               startDate={role.startDate}
                               endDate={role.endDate}
                               key={role.id}
+                              roleType={role.roleType}
                               id={role.id}
                         />
                     </div>

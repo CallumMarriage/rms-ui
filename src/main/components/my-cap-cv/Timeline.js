@@ -46,7 +46,7 @@ const TopTimelineSeparator = withStyles({
 
 const StyledTimeline = withStyles({
     root: {
-        backgroundColor: '#DCDCDC'
+        backgroundColor: 'white'
     }
 })(Timeline)
 

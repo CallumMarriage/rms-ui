@@ -53,9 +53,8 @@ class MyCapgeminiCv extends React.Component {
 
     async componentDidMount() {
         const userId = this.props.userId;
-
+        console.log(userId);
         const res = await retrieveRoleHistory(userId);
-        console.log(res)
         if (res == null) {
             this.setState({
                 loading: false
@@ -67,7 +66,7 @@ class MyCapgeminiCv extends React.Component {
             })
         } else {
             this.setState({
-                roleHistory: res.rolehistory,
+                roleHistory: res.potentialRoles,
                 loading: false
             })
         }

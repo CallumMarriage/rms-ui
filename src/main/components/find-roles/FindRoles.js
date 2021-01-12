@@ -10,11 +10,17 @@ import Typography from "@material-ui/core/Typography";
 
 import RolesContainer from "./RolesContainer";
 import TitleContainer from "../shared/TitleContainer";
-import { retrievePotentialRoles } from "../../services/roleService";
-
+import {retrievePotentialRoles, retrieveRolesByAccountName, retrieveRolesByRoleType} from "../../services/roleService";
+import {getRoleTypes} from "../shared/RoleTypes";
 import Error from "../shared/Error";
-import {applyForRole} from "../../services/applicationService";
+import MenuItem from "@material-ui/core/MenuItem";
+import withStyles from "@material-ui/core/styles/withStyles";
 
+const StyledPaper = withStyles({
+    root: {
+        marginBottom: '20px'
+    }
+})(Paper);
 
 class FindRoles extends React.Component {
     constructor(props) {
@@ -22,6 +28,9 @@ class FindRoles extends React.Component {
 
         this.state = {
             potentialRoles: [],
+            roleType: null,
+            accountName: null,
+            projectName: null,
             filterActive: false,
             filteredPotentialRoles: [],
             loading: true,
@@ -29,23 +38,78 @@ class FindRoles extends React.Component {
             searchItem: '',
             searching: true,
             hasError: false,
-            error: null
+            error: null,
+            currentPage: 0,
+            currentPageItems: []
         };
     }
 
-    handleChange = (e) => {
+    filter() {
+
+        if (this.state.accountName == null && this.state.projectName == null && this.state.roleType != null) {
+            let filtered = this.searchByRoleType(this.state.roleType);
+            if(filtered > 5){
+
+            }
+        }
+
+        let filters = []
+
+        if (this.state.accountName !== null) {
+            filters.push(`accountName=${this.state.accountName}`)
+        }
+
+        if (this.state.projectName !== null) {
+            filters.push(`projectName=${this.state.projectName}`)
+        }
+
+        if (this.state.roleType !== null) {
+            filters.push(`roleType=${this.state.projectName}`)
+        }
+
+
+    }
+
+    handleChangeByRoleType(e) {
+
+        this.setAsFiltering();
+
         this.setState({
-            [e.target.name]: e.target.value,
-            filterActive: true
-        });
-        this.submitSearch(e.target.value);
-    };
+            roleType: e.target.value,
+        })
 
-    submitSearch(searchItem) {
-        this.setState(
-            {searching: true}
-        )
+        this.searchByRoleType(e.target.value)
+    }
 
+    async handleSearchByAccount(e) {
+        this.setAsFiltering();
+
+        this.setState({
+            accountName: e.target.value,
+        })
+
+        await this.searchByAccount(e.target.value)
+    }
+
+    async searchByAccount(accountName) {
+        const res = await retrieveRolesByAccountName(accountName);
+
+        this.saveResponse(res);
+    }
+
+
+    setAsFiltering() {
+        this.setState({
+            searching: true,
+            filterActive: true,
+            filteredPotentialRoles: []
+        })
+    }
+
+    searchByRoleType(roleType) {
+
+        return this.state.potentialRoles.filter(
+            role => role.roleType === roleType)
     }
 
     resetFilter() {
@@ -59,10 +123,15 @@ class FindRoles extends React.Component {
 
         const res = await retrievePotentialRoles(userId, 10);
         this.setState({potentialRoles: []})
+        console.log(res)
+        this.saveResponse(res);
+    }
 
+    saveResponse(res) {
         if (res == null) {
             this.setState({
-                loading: false
+                loading: false,
+                hasError: false
             })
         } else if (res.hasError) {
             this.setState({
@@ -73,22 +142,13 @@ class FindRoles extends React.Component {
             this.setState({
                 potentialRoles: res.potentialRoles,
                 loading: false,
+                hasError: false,
                 searching: false
             })
         }
     }
 
     render() {
-        if (this.state.loading) {
-            return (<CircularProgress/>
-            )
-        }
-
-        if (this.state.hasError) {
-            return (
-                <Error/>
-            )
-        }
 
         let potentialRoles = this.state.potentialRoles;
 
@@ -102,7 +162,7 @@ class FindRoles extends React.Component {
                 <TitleContainer title={'Find new roles'}/>
 
                 <Grid item xs={4}>
-                    <Paper style={{width: '90%'}}>
+                    <StyledPaper style={{width: '90%'}}>
                         <Typography variant={"h6"}>
                             Use these filters to refine your search
                         </Typography>
@@ -114,8 +174,8 @@ class FindRoles extends React.Component {
                             }}
                                        id="outlined-search"
                                        label={"Search By Project"}
-                                       name={"searchItem"}
-                                       value={this.state.searchItem}
+                                       name={"projectName"}
+                                       value={this.state.projectName}
                                        type="search"
                                        variant="outlined"
                                        onChange={this.handleChange}
@@ -129,21 +189,48 @@ class FindRoles extends React.Component {
                             }}
                                        id="outlined-search"
                                        label="Search By Account"
-                                       name={"searchItem"}
-                                       value={this.state.searchItem}
+                                       name={"accountName"}
+                                       value={this.state.accountName}
                                        type="search"
                                        variant="outlined"
-                                       onChange={this.handleChange}
+                                       onChange={this.handleSearchByAccount.bind(this)}
                             />
                         </Grid>
-
-                        <Button onClick={this.resetFilter}>
+                        <Grid item xs={12}>
+                            <TextField style={{
+                                width: '90%',
+                                marginTop: '20px',
+                                height: '20%'
+                            }}
+                                       id="outlined-select-roleType"
+                                       select
+                                       label="Search By Role Type"
+                                       value={this.state.roleType}
+                                       onChange={this.handleChangeByRoleType.bind(this)}
+                                       helperText="Please select from the list what closest matches your role"
+                                       variant="outlined">
+                                {getRoleTypes().map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Button onClick={this.filter.bind(this)}>
                             Reset Filters
                         </Button>
-                    </Paper>
+                        <Button onClick={this.resetFilter.bind(this)}>
+                            Reset Filters
+                        </Button>
+                    </StyledPaper>
                 </Grid>
                 <Grid item xs={8}>
-                    {loadPotentialRolesBox(potentialRoles, this.state.searching, userId)}
+                    {loadPotentialRolesBox(this.state.loading, this.state.hasError, potentialRoles, this.state.searching, userId)}
+                </Grid>
+                <Grid item xs={12}>
+                    <div style={{marginBottom: '50px'}}>
+
+                    </div>
                 </Grid>
             </Grid>
         );
@@ -151,14 +238,26 @@ class FindRoles extends React.Component {
 }
 
 
-function loadPotentialRolesBox(potentialRoles, isSearching) {
+function loadPotentialRolesBox(loading, hasError, potentialRoles, isSearching) {
+
+    if (loading) {
+        return (<CircularProgress/>
+        )
+    }
+
+    if (hasError) {
+        return (
+            <Error/>
+        )
+    }
+
     if (isSearching) {
         return (
             <Paper style={{width: '100%', minHeight: '350px', maxHeight: '400px', overflow: 'auto'}}>
                 <CircularProgress style={{marginTop: '20px'}}/>
             </Paper>
         );
-    } else if(potentialRoles.length === 0) {
+    } else if (potentialRoles.length === 0) {
         return (
             <Paper>
                 No roles matching your search.
@@ -169,11 +268,6 @@ function loadPotentialRolesBox(potentialRoles, isSearching) {
             <RolesContainer potentialRoles={potentialRoles}/>
         )
     }
-}
-
-async function apply(role, userId) {
-    await applyForRole(userId, role);
-    // window.location.reload(false);
 }
 
 const mapStateToProps = (state) => {
