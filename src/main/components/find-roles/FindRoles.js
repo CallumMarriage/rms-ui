@@ -28,7 +28,7 @@ class FindRoles extends React.Component {
 
         this.state = {
             potentialRoles: [],
-            roleType: null,
+            roleType: getRoleTypes()[0].value,
             accountName: null,
             projectName: null,
             filterActive: false,
@@ -48,7 +48,7 @@ class FindRoles extends React.Component {
 
         if (this.state.accountName == null && this.state.projectName == null && this.state.roleType != null) {
             let filtered = this.searchByRoleType(this.state.roleType);
-            if(filtered > 5){
+            if (filtered > 5) {
 
             }
         }
@@ -123,7 +123,6 @@ class FindRoles extends React.Component {
 
         const res = await retrievePotentialRoles(userId, 10);
         this.setState({potentialRoles: []})
-        console.log(res)
         this.saveResponse(res);
     }
 
@@ -253,7 +252,14 @@ function loadPotentialRolesBox(loading, hasError, potentialRoles, isSearching) {
 
     if (isSearching) {
         return (
-            <Paper style={{width: '100%', minHeight: '350px', maxHeight: '400px', overflow: 'auto'}}>
+            <Paper style={
+                {
+                    width: '100%',
+                    minHeight: '350px',
+                    maxHeight: '400px',
+                    overflow: 'auto'
+                }
+            }>
                 <CircularProgress style={{marginTop: '20px'}}/>
             </Paper>
         );

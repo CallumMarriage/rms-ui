@@ -1,15 +1,9 @@
 import {error} from "./model/error";
 import {accessApiGet} from "./dao/dao";
+import {handleGet} from "./serviceHelper";
 
 export async function retrieveAccountInfo(accountId) {
-    try {
-        console.log('Making request to Account API')
-
-        let res = await accessApiGet(`/account/id/${accountId}`)
-        return res.responseBody;
-    } catch (e) {
-        return error
-    }
+    return await handleGet(`/account/id/${accountId}`)
 }
 
 export async function retrieveAllAccounts(){

@@ -6,13 +6,15 @@ import {Typography} from '@material-ui/core';
 import withStyles from "@material-ui/core/styles/withStyles";
 
 import "./NavbarOption.css"
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
     button: {
         textAlign: 'center',
         color: theme.palette.text.secondary,
         width: '100%',
-        height: '40px',
+        minHeight: '50px',
+        height: 'fit-content',
         "&.active": {
             backgroundColor: 'black',
         },
@@ -28,20 +30,30 @@ const CapgeminiBlueTypography = withStyles({
     }
 })(Typography);
 
-function conditionalRenderNumber(number) {
+function conditionalRenderNumber(number, loading) {
     if (number === undefined) {
+        return (<div/>)
+    }
+    let Value = () => {
         return (
-            <Grid item xs={2}>
-            </Grid>)
-    } else {
-        return (
-            <Grid item xs={2}>
+            <CircularProgress style={{color: 'white'}}/>
+        )
+    }
+
+    if (!loading) {
+        Value = () => {
+            return (
                 <CapgeminiBlueTypography variant={"h6"}>
                     {number}
                 </CapgeminiBlueTypography>
-            </Grid>
-        )
+            )
+        }
     }
+
+    return (
+        <Value/>
+    )
+
 }
 
 
@@ -50,21 +62,24 @@ export default function NavbarOption(props) {
     const TheIcon = props.icon;
 
     return (
-        <Grid item xs={12} container>
-            <Button className={classes.button}
-                    href={props.link}>
+        <Button className={classes.button}
+                href={props.link}>
+            <Grid container>
 
-                <Grid item xs={3}>
+                <Grid item xs={12} lg={3}>
                     {props.children}
                     <TheIcon/>
                 </Grid>
-                <Grid item xs={7}>
+                <Grid item xs={9} lg={7}>
                     <CapgeminiBlueTypography variant="body2">
                         {props.title}
                     </CapgeminiBlueTypography>
                 </Grid>
-                {conditionalRenderNumber(props.number)}
-            </Button>
-        </Grid>
+                <Grid item xs={2} lg={2}>
+                    {conditionalRenderNumber(props.number, props.loading)}
+                </Grid>
+            </Grid>
+
+        </Button>
     )
 }

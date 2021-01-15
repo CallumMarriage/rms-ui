@@ -9,7 +9,7 @@ export default function RolesContainer (props) {
         <Paper className={"rolesContainer"}>
             {props.potentialRoles.map(role => {
                 return (
-                    <div id={role.id}>
+                    <div key={role.id}>
                         <Role projectName={role.projectName}
                               projectCode={role.projectCode}
                               accountName={role.accountName}

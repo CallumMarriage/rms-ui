@@ -31,6 +31,7 @@ async function get(endpoint, host) {
             throw new Error('Internal Server Error');
         }
     }
+
     return await res.json()
 }
 
@@ -44,6 +45,7 @@ async function post(endpoint, body, host) {
     );
 
     if (res.status !== 201 && res.status !== 202) {
+        console.log(res)
         throw new Error('Internal Server Error');
     }
 }

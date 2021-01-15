@@ -87,8 +87,9 @@ class Home extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+    console.log(state);
     return {
-        userId: state.auth.userId,
+        userId: state.auth.user.id,
     };
 }
 

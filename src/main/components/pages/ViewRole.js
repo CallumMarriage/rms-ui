@@ -4,16 +4,82 @@ import TitleContainer from "../shared/TitleContainer";
 import Paper from "@material-ui/core/Paper";
 import {Typography} from "@material-ui/core";
 import {getRoleTypes} from "../shared/RoleTypes";
+import {connect} from "react-redux";
+import {applyForRole} from "../../services/applicationService";
+import Button from "@material-ui/core/Button";
+import {retrieveRole} from "../../services/roleService";
+import Error from "../shared/Error";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 class ViewRole extends React.Component {
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            userAlreadyApplied: false,
+            hasError: false,
+            loading: true,
+            role: this.props.location.state.role
+        }
+    }
+
+    async componentDidMount() {
+        if (this.state.role.dataMissing) {
+            const res = await retrieveRole(this.state.role.id);
+
+            if (res === undefined || res.hasError) {
+                this.setState({
+                    loading: false,
+                    hasError: true
+                })
+            }
+
+            this.setState({
+                loading: false,
+                hasError: false,
+                role: res
+            })
+        } else {
+            this.setState({
+                loading: false
+            })
+        }
+    }
+
+    async apply() {
+        const userId = this.props.userId;
+        let res = await applyForRole(userId, this.props.location.state.role)
+
+        if (res !== undefined && res.hasError) {
+            return (
+                alert("Failed to apply for role")
+            )
+        } else {
+            return (
+                alert("Successfully applied to role")
+            )
+        }
+    }
+
     render() {
-        const { role } = this.props.location.state
+
+        const role = this.state.role;
+
+        if (this.state.loading) {
+            return <CircularProgress/>
+        }
+
+        if (this.state.hasError) {
+            return (
+                <Error/>
+            );
+        }
 
         const roleType = getRoleTypes()
             .find(roleT => roleT.value === role.roleType).label
 
-        return(
+        return (
             <Grid container>
                 <TitleContainer title={`${role.roleName} at ${role.projectName}`}/>
                 <Grid item xs={6}>
@@ -33,9 +99,21 @@ class ViewRole extends React.Component {
                         </Typography>
                     </Paper>
                 </Grid>
+                <Grid item xs={12}>
+                    <Button onClick={this.apply.bind(this)}>
+                        Apply
+                    </Button>
+                </Grid>
             </Grid>
         )
 
     }
 }
-export default ViewRole;
+
+const mapStateToProps = (state) => {
+    return {
+        userId: state.auth.user.id,
+    };
+}
+
+export default connect(mapStateToProps)(ViewRole);

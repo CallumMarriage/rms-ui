@@ -1,11 +1,38 @@
 import { error } from "./model/error";
-import { accessApiGet } from "./dao/dao";
+import {accessApiGet, accessApiPost} from "./dao/dao";
+
+export async function addNewRole(userId, role){
+    console.log("Making request to add new Role");
+
+    const body = {
+        userId,
+        role
+    }
+    try {
+        await accessApiPost('/roleForUser', body);
+        return true;
+    } catch (e) {
+        return error;
+    }
+}
 
 export async function retrieveRoleInfo(id) {
     try {
         console.log('Making request to Role API')
 
         const res = await accessApiGet(`/user/info?googleId=${id}`);
+
+        return res.responseBody;
+    } catch (e) {
+        return error;
+    }
+}
+
+export async function retrieveRole(roleId) {
+    try {
+        console.log('Making request to Role API')
+
+        const res = await accessApiGet(`/role/id/${roleId}`);
 
         return res.responseBody;
     } catch (e) {

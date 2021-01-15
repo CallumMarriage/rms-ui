@@ -10,6 +10,7 @@ import AccountImage from "../pages/AccountImage";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import AccountItem from "./AccountItem";
+import TextField from "@material-ui/core/TextField";
 
 class SearchAccounts extends React.Component {
 
@@ -18,8 +19,10 @@ class SearchAccounts extends React.Component {
 
         this.state = {
             accountList: [],
+            filteredAccountList: null,
             loading: true,
-            hasError: false
+            hasError: false,
+            searchItem: null
         }
     }
 
@@ -44,14 +47,51 @@ class SearchAccounts extends React.Component {
         }
     }
 
+    handleChange = (event) => {
+        this.setState({
+            searchItem: event.target.value
+        });
+        this.setState({
+            filteredAccountList: this.state.accountList.filter(account =>
+                account.accountName.includes(event.target.value))
+        })
+
+    }
 
     render() {
+
+        let accountList = this.state.accountList;
+        if(this.state.filteredAccountList !== null){
+            accountList = this.state.filteredAccountList;
+        }
+
         return (
             <Grid container>
                 <TitleContainer title={'Search Accounts'}/>
-                <Paper style={{width: '100%', minHeight: '350px', maxHeight: '400px', overflow: 'auto'}}>
+                <Paper style={{
+                    width: '100%',
+                    minHeight: '350px',
+                    maxHeight: '750px',
+                    overflow: 'auto',
+                    marginBottom: '100px'
+                }}>
+                    <Grid item xs={12}>
+                        <TextField style={{
+                            width: '90%',
+                            marginTop: '20px',
+                            height: '5%'
+                        }}
+                                   id="outlined-search"
+                                   label={"Search By Account Name"}
+                                   name={"accountName"}
+                                   value={this.state.searchItem}
+                                   type="search"
+                                   variant="outlined"
+                                   onChange={this.handleChange}
+                        />
+                    </Grid>
                     {renderAccounts(this.state.loading,
-                        this.state.hasError, this.state.accountList)}
+                        this.state.hasError, accountList)}
                 </Paper>
             </Grid>
         )
@@ -72,11 +112,11 @@ function renderAccounts(loading, hasError, accountList) {
     }
 
     return (
-        <Grid container>
+        <Grid container style={{marginBottom: '20px'}}>
             {
                 accountList.map(account => {
                     return (
-                        <AccountItem account={account}/>
+                        <AccountItem account={account} key={account.accountCode}/>
                     )
                 })
             }

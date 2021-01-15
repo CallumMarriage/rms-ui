@@ -41,9 +41,6 @@ class App extends React.Component {
                                 <Header/>
                             </Grid>
                             <Grid container spacing={0}>
-                                <Grid item xs={3}>
-                                    <Navbar/>
-                                </Grid>
                                 {renderPage(this.props)}
 
                             </Grid>
@@ -61,8 +58,13 @@ class App extends React.Component {
 function renderPage(props) {
     if (props.isSignedIn) {
         return (
-            <Grid item xs={9}>
-                {RenderRouter(props)}
+            <Grid container>
+                <Grid item xs={3}>
+                    <Navbar/>
+                </Grid>
+                <Grid item xs={9}>
+                    {RenderRouter(props)}
+                </Grid>
             </Grid>
         );
     } else if (props.loading) {

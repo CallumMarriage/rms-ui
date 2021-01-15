@@ -30,7 +30,7 @@ class AccountImage extends React.Component {
                 <div style={{width: '100%', background: 'white'}}>
                     <img src={this.state.defaultImage}
                          alt={"Cover for Account"}
-                         style={{with: '200px', height: '90px'}}
+                         style={{maxWidth: '100%', maxHeight: '100%'}}
                     />
                 </div>
             )
@@ -40,7 +40,7 @@ class AccountImage extends React.Component {
             <div style={{width: '100%', background: 'white'}}>
                 <img src={`data:image/jpeg;base64,${this.state.image}`}
                      alt={"Cover for Account"}
-                     style={{with: '200px', height: '75px'}}
+                     style={{maxWidth: 'match-parent', maxHeight: '200px'}}
                 />
             </div>
         )

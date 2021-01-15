@@ -5,11 +5,19 @@ import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {retrieveApplications} from "../../services/applicationService";
 
-import Application from "./Application";
 import Error from "../shared/Error";
 import TitleContainer from "../shared/TitleContainer";
 import Grid from "@material-ui/core/Grid";
 import {Typography} from "@material-ui/core";
+import TableCell from "@material-ui/core/TableCell";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+import TableContainer from "@material-ui/core/TableContainer";
+import Table from "@material-ui/core/Table";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import TableBody from "@material-ui/core/TableBody";
+import {AccountLink, ProjectLink, RoleLink} from "../shared/Links";
+
 
 class MyApplications extends React.Component {
     constructor(props) {
@@ -77,25 +85,87 @@ function renderApplicationContainer(loading, hasError, applications) {
             </div>
         )
     }
-    {
-        return (
-            <div>
-                {
-                    applications.map(application => {
-                        return (
-                            <div className={'row'} key={applications.applicationId}>
-                                <Application projectId={application.projectId}
-                                             applicationDate={application.applicationDate}
-                                             applicationStatus={application.applicationStatus}
-                                />
-                            </div>
-                        )
-                    })
-                }
-            </div>
-        )
-    }
 
+    return (
+        <Paper style={{margin: '10px'}}>
+            <TableContainer component={Paper}>
+                <Table size="small" aria-label="a dense table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Application ID</TableCell>
+                            <TableCell align="right">Application date</TableCell>
+                            <TableCell align="right">Role ID</TableCell>
+                            <TableCell align="right">Project code</TableCell>
+                            <TableCell align="right">Account number</TableCell>
+                            <TableCell align="right">Application Status</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {applications.map((application) => (
+                            <TableRow key={application.applicationId}>
+                                <TableCell component="th" scope="row">
+                                    {application.applicationId}
+                                </TableCell>
+                                <TableCell align="right">
+                                    {application.applicationDate}
+                                </TableCell>
+                                <TableCell align="right">
+                                    {
+                                        RoleLink({
+                                            accountNumber: application.accountId,
+                                            projectCode: application.projectId,
+                                            id: application.roleId,
+                                            dataMissing: true
+                                        }, RoleItem)
+                                    }
+                                </TableCell>
+                                <TableCell align="right">
+                                    {
+                                        ProjectLink({
+                                            accountNumber: application.accountId,
+                                            projectCode: application.projectId
+                                        }, ProjectItem)
+                                    }
+                                </TableCell>
+                                <TableCell align="right">
+                                    {
+                                        AccountLink({
+                                            accountNumber: application.accountId
+                                        }, AccountItem)
+                                    }
+                                </TableCell>
+                                <TableCell align="right">{application.applicationStatus}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Paper>
+    )
+}
+
+function ProjectItem(props) {
+    return (
+        <div>
+            {props.props.projectCode}
+        </div>
+    )
+}
+
+function AccountItem(props) {
+    return (
+        <div>
+            {props.props.accountNumber}
+        </div>
+    )
+}
+
+function RoleItem(props) {
+    return (
+        <div>
+            {props.props.id}
+        </div>
+    )
 }
 
 const mapStateToProps = (state) => {

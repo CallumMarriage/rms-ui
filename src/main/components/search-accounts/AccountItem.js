@@ -9,44 +9,49 @@ import {Link} from "react-router-dom";
 
 const StyledButton = withStyles({
     root: {
-        width: '100%'
+        width: '100%',
+        textTransform: 'none'
     }
 })(Button)
 
 const StyledPaper = withStyles({
     root: {
-        marginTop: '10px',
-        margin: 'auto',
+        margin: '20px',
         width: '90%',
-        minHeight: '50px',
-        border: '2px solid black',
-        marginBottom: '10px'
+        height: '240px',
+        border: '0.5px solid black'
     }
 })(Paper)
 
 export default function AccountItem(props) {
     const account = props.account
-    console.log(account)
     return (
-        <Grid item xs={12} key={account.accountCode}>
-            <StyledPaper>
-                <Link style={{textDecoration: 'none'}} to={{
-                    pathname: `/Account/${account.accountCode}`,
-                    state: {accountNumber: account.accountCode}
-                }}>
+        <Grid item lg={4} md={6} xs={12} key={account.accountCode}>
+            <Link style={{textDecoration: 'none'}} to={{
+                pathname: `/Account/${account.accountCode}`,
+                state: {accountNumber: account.accountCode}
+            }}>
+                <StyledPaper>
+
                     <StyledButton>
                         <Grid container>
-                            <Grid item xs={6}>
+                            <Grid item xs={12}>
                                 <AccountImage accountNumber={account.accountCode}/>
                             </Grid>
-                            <Grid item xs={6}>
-                                <Typography variant={'h4'}>
-                                    {account.accountName}
+                            <Grid item xs={12}>
+                                <Typography variant={'body1'} style={
+                                    {
+                                        fontSize: '0.8em',
+                                        position: 'relative',
+                                        bottom: '0px'
+                                    }
+                                }>
+                                    {account.description}
                                 </Typography>
                             </Grid>
                         </Grid>
                     </StyledButton>
-                </Link>
-            </StyledPaper>
+                </StyledPaper>
+            </Link>
         </Grid>)
 }

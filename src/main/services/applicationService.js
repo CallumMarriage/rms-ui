@@ -24,9 +24,9 @@ export async function retrieveNumOfApplications(userId) {
         console.log('Making request to Applications api')
 
         const res = await accessApiGet(`/applications/amount?userId=${userId}`);
-
         return res.responseBody
     } catch (e) {
+        console.log(e);
         return {
             hasError: true
         }
@@ -36,7 +36,6 @@ export async function retrieveNumOfApplications(userId) {
 export async function applyForRole(userId, role) {
     try {
         console.log('Making request to add application for role')
-
         const body = {
             applicantId: userId,
             roleId: role.id,
@@ -46,7 +45,6 @@ export async function applyForRole(userId, role) {
 
         return await accessApiPost('/application', body);
     } catch (e) {
-        console.log(e);
         return {
             hasError: true
         }

@@ -34,7 +34,8 @@ class Navbar extends React.Component {
         super(props);
 
         this.state = {
-            numOfApps: 0
+            loading: true,
+            numOfApps: '0'
         };
     }
 
@@ -44,9 +45,11 @@ class Navbar extends React.Component {
             return;
         }
 
+        console.log("Making request to receive number of apps")
         const res = await retrieveNumOfApplications(this.props.user.id);
 
         this.setState({
+            loading: false,
             numOfApps: res.numOfApplications
         })
     }
@@ -77,7 +80,8 @@ class Navbar extends React.Component {
                         <NavbarOption link="/MyApplications"
                                       icon={EmailIcon}
                                       title={"My Applications"}
-                                      number={numOfApps}/>
+                                      number={numOfApps}
+                                      loading={this.state.loading}/>
 
                     </Grid>
                 </Paper>
