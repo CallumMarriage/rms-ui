@@ -1,15 +1,24 @@
 import { error } from "./model/error";
 import {accessApiGet, accessApiPost} from "./dao/dao";
 
-export async function addNewRole(userId, role){
+export async function addNewRole(userId, state){
     console.log("Making request to add new Role");
-
     const body = {
         userId,
-        role
+        role : {
+            startDate: state.startDate,
+            endDate: state.endDate,
+            accountNumber: state.accountNumber,
+            accountName: state.accountName,
+            projectCode: state.project.projectCode,
+            projectName: state.project.projectName,
+            description: state.description,
+            roleName: state.roleName,
+            roleType: state.roleType
+        }
     }
     try {
-        await accessApiPost('/roleForUser', body);
+        await accessApiPost('/role', body);
         return true;
     } catch (e) {
         return error;

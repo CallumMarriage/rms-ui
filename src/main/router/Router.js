@@ -14,6 +14,9 @@ import Account from "../components/pages/Account";
 import Project from "../components/pages/Project";
 import AddNewRole from "../components/my-cap-cv/add-new-role/AddNewRole";
 import SearchAccounts from "../components/search-accounts/SearchAccounts";
+import ProjectManagerSpace from "../components/project-manager-space/ProjectManagerSpace";
+import AddNewAccount from "../components/project-manager-space/add-new-account/AddNewAccount";
+import AddNewProject from "../components/pages/add-new-project/AddNewProject";
 
 export default function MyRouter(props){
     return(
@@ -44,12 +47,28 @@ export default function MyRouter(props){
                                    isSignedIn: props.isSignedIn
                                }}
                 />
+
                 <EmployeeRoute exact path="/AddNewRole"
                                component={AddNewRole}
                                appProps={{
                                    isSignedIn: props.isSignedIn
                                }}
                 />
+
+                <EmployeeRoute exact path="/AddNewAccount"
+                               component={AddNewAccount}
+                               appProps={{
+                                   isSignedIn: props.isSignedIn
+                               }}
+                />
+
+                <EmployeeRoute exact path="/AddNewProject"
+                               component={AddNewProject}
+                               appProps={{
+                                   isSignedIn: props.isSignedIn
+                               }}
+                />
+
                 <EmployeeRoute exact path="/SearchAccounts"
                                component={SearchAccounts}
                                appProps={{
@@ -91,8 +110,12 @@ export default function MyRouter(props){
                                    isSignedIn:  props.isSignedIn
                                }}/>
 
+
                 {/*<EmployeeRoute exact path="/AccountDirectorSpace" component={AccountDirectorSpace}/>*/}
-                {/*<EmployeeRoute exact path="/ProjectManagerSpace" component={ProjectManagerSpace}/>*/}
+                <EmployeeRoute exact path="/ProjectManagement"
+                               component={ProjectManagerSpace}
+
+                />
                 <Route path="*" exact={true} component={NotFound}/>
             </Switch>
         </Grid>

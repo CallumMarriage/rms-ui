@@ -1,13 +1,15 @@
 import React from 'react';
 import {connect} from "react-redux";
+import {Link} from "react-router-dom";
+
+import {retrieveResourceManagerName} from "../../services/userService";
 
 import Grid from "@material-ui/core/Grid";
 import {Typography} from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
-import {retrieveResourceManagerName} from "../../services/userService";
 import Button from "@material-ui/core/Button";
-import {Link} from "react-router-dom";
+import {AccountLink, ProjectLink, RoleLink} from "../shared/Links";
 
 
 const StyledButton = withStyles({
@@ -15,6 +17,7 @@ const StyledButton = withStyles({
         border: 'solid 2px #0070AD',
         backgroundColor: '#0070AD',
         margin: '10px',
+        height: '100px',
         width: '90%',
         "&:hover": {
             backgroundColor: "#12ABDB"
@@ -36,13 +39,14 @@ const StyledPaper = withStyles({
         margin: '20px',
         width: '100%',
         padding: '10px',
+        textTransform: 'none',
         border: 'solid 5px green'
     }
 })(Paper)
 
 const ErrorStyledPaper = withStyles({
     root: {
-        border: 'solid 5px red'
+        border: 'solid 5px red',
     }
 })(StyledPaper)
 
@@ -96,7 +100,7 @@ class YourRole extends React.Component {
     render() {
         let project = this.props.currentProject;
         let account = this.props.currentAccount;
-        let role = this.props.role;
+        let role = this.props.currentRole;
 
         return (
             <Paper style={{width: '80%', margin: 'auto', marginTop: '50px', padding: '30px', marginBottom: '50px'}}>
@@ -141,7 +145,8 @@ function returnInfo(project, account, role, resourceManager) {
                             </Typography>
                             <Link to={"/MyCapgeminiCv"} style={{textDecoration: 'none'}}>
                                 <Typography variant={"subtitle1"}>
-                                    If your current project is not being shown you can find instructions here on how to make
+                                    If your current project is not being shown you can find instructions here on how to
+                                    make
                                     sure our system is up to date.
                                 </Typography>
                             </Link>
@@ -156,58 +161,77 @@ function returnInfo(project, account, role, resourceManager) {
         <Grid container style={{marginBottom: '20px'}}>
             <Grid item xs={4}>
                 {
-                    retrieveButton(
-                        role,
-                        'Your Current Role',
-                        `Account/${role.accountNumber}/Project/${role.projectCode}/ViewRole/${role.id}`,
-                        {role: role}
-                    )
+                    RoleLink(role, RoleButton)
                 }
             </Grid>
             <Grid item xs={4}>
                 {
-                    retrieveButton(project,
-                        'Current Project',
-                        `Account/${role.accountNumber}/Project/${role.projectCode}`,
-                        {project: project}
-                    )
+                    ProjectLink(project, ProjectButton)
                 }
             </Grid>
             <Grid item xs={4}>
-                {retrieveButton(account,
-                    'Current Account',
-                    `Account/${role.accountNumber}`,
-                    {account: account}
-                )}
+                {
+                    AccountLink({
+                        accountNumber: account.accountCode,
+                        accountName: account.accountName
+                    }, AccountButton)
+                }
             </Grid>
             <Grid item xs={4}>
-                {retrieveButton(resourceManager, 'Your Resource Manager')}
+                {/*{retrieveButton(resourceManager, 'Your Resource Manager')}*/}
             </Grid>
         </Grid>
     )
 }
 
-function retrieveButton(data, content, path, state) {
+function RoleButton(props) {
+    let message = 'Current Role: ' + props.props.id;
+    return (
+        <div>
+            {
+                LinkButton(message)
+            }
+        </div>
+    )
+}
+
+function AccountButton(props) {
+    console.log(props)
+    let message = 'Current Account: ' + props.props.accountNumber
+    return (
+        <div>
+            {
+                LinkButton(message)
+            }
+        </div>
+    )
+}
+
+function ProjectButton(props) {
+    let message = 'Current Project: ' + props.props.projectCode
 
     return (
-        <Link to={{
-            pathname: path,
-            state: state
-        }}>
-            <StyledButton>
-                <PrimaryTyp variant={"h4"}>
-                    {
-                        content
-                    }
-                </PrimaryTyp>
-            </StyledButton>
-        </Link>
+        <div>
+            {
+                LinkButton(message)
+            }
+        </div>
     )
+}
 
+function LinkButton(content) {
+    return (
+        <StyledButton>
+            <PrimaryTyp variant={"h4"}>
+                {
+                    content
+                }
+            </PrimaryTyp>
+        </StyledButton>
+    )
 }
 
 const mapStateToProps = (state) => {
-    console.log(state)
     return {
         user: state.auth.user,
         currentRole: state.auth.currentRole,

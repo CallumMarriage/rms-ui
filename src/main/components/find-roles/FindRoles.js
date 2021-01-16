@@ -7,14 +7,14 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
 import {Button} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
+import MenuItem from "@material-ui/core/MenuItem";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 import RolesContainer from "./RolesContainer";
 import TitleContainer from "../shared/TitleContainer";
-import {retrievePotentialRoles, retrieveRolesByAccountName, retrieveRolesByRoleType} from "../../services/roleService";
+import {retrievePotentialRoles, retrieveRolesByAccountName} from "../../services/roleService";
 import {getRoleTypes} from "../shared/RoleTypes";
 import Error from "../shared/Error";
-import MenuItem from "@material-ui/core/MenuItem";
-import withStyles from "@material-ui/core/styles/withStyles";
 
 const StyledPaper = withStyles({
     root: {

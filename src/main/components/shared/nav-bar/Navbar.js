@@ -10,7 +10,7 @@ import {connect} from "react-redux";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {retrieveNumOfApplications} from "../../../services/applicationService";
 import SearchIcon from '@material-ui/icons/Search';
-
+import BusinessIcon from '@material-ui/icons/Business';
 
 const styles = theme => ({
     root: {
@@ -76,6 +76,10 @@ class Navbar extends React.Component {
                         <NavbarOption link="/SearchAccounts"
                                       icon={SearchIcon}
                                       title={"Search Accounts"}/>
+
+                        <NavbarOption link="/ProjectManagement"
+                                      icon={BusinessIcon}
+                                      title={"Manage Projects"}/>
 
                         <NavbarOption link="/MyApplications"
                                       icon={EmailIcon}

@@ -1,14 +1,16 @@
 import React from "react";
-import Grid from "@material-ui/core/Grid";
+import {connect} from "react-redux";
+
+import {getRoleTypes} from "../shared/RoleTypes";
+import Error from "../shared/Error";
 import TitleContainer from "../shared/TitleContainer";
+import {retrieveRole} from "../../services/roleService";
+import {applyForRole} from "../../services/applicationService";
+
+import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import {Typography} from "@material-ui/core";
-import {getRoleTypes} from "../shared/RoleTypes";
-import {connect} from "react-redux";
-import {applyForRole} from "../../services/applicationService";
 import Button from "@material-ui/core/Button";
-import {retrieveRole} from "../../services/roleService";
-import Error from "../shared/Error";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 class ViewRole extends React.Component {

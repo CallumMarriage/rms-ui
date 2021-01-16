@@ -11,6 +11,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Error from "../shared/Error";
 import TitleContainer from "../shared/TitleContainer";
 import {ProjectLink} from "../shared/Links";
+import {Link} from "react-router-dom";
 
 const StyledPaper = withStyles({
     root: {
@@ -196,6 +197,18 @@ class Account extends React.Component {
                                         </Grid>
                                     )
                                 })}
+                                <Grid item xs={12}>
+                                    <Link style={{textDecoration: 'none'}} to={{
+                                        pathname: `/AddNewProject`,
+                                        state: {accountNumber: this.state.accountNumber}
+                                    }}>
+                                        <Button>
+                                            <Typography variant={"h6"}>
+                                                Add a new Project
+                                            </Typography>
+                                        </Button>
+                                    </Link>
+                                </Grid>
                             </Grid>
                         </Paper>
 

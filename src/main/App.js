@@ -1,18 +1,20 @@
 import React from 'react';
-
-import './App.css';
-import {BrowserRouter as Router} from "react-router-dom";
-import Grid from "@material-ui/core/Grid";
-
-import {createMuiTheme, ThemeProvider} from '@material-ui/core/styles';
-
 import {connect} from 'react-redux';
+import {BrowserRouter as Router} from "react-router-dom";
+
+import DateFnsUtils from '@date-io/date-fns';
 
 import Header from "./components/shared/header/Header";
 import Footer from "./components/shared/footer/Footer";
 import Navbar from "./components/shared/nav-bar/Navbar";
 import MyRouter from "./router/Router";
+
+import MuiPickersUtilsProvider from "@material-ui/pickers/MuiPickersUtilsProvider";
+import Grid from "@material-ui/core/Grid";
+import {createMuiTheme, ThemeProvider} from '@material-ui/core/styles';
 import CircularProgress from "@material-ui/core/CircularProgress";
+
+import './App.css';
 
 const theme = createMuiTheme({
     typography: {
@@ -33,23 +35,23 @@ class App extends React.Component {
     render() {
         return (
             <div className="App">
-                <ThemeProvider theme={theme}>
+                    <ThemeProvider theme={theme}>
 
-                    <Grid container spacing={3}>
-                        <Router>
-                            <Grid item xs={12}>
-                                <Header/>
-                            </Grid>
-                            <Grid container spacing={0}>
-                                {renderPage(this.props)}
+                        <Grid container spacing={3}>
+                            <Router>
+                                <Grid item xs={12}>
+                                    <Header/>
+                                </Grid>
+                                <Grid container spacing={0}>
+                                    {renderPage(this.props)}
 
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Footer/>
-                            </Grid>
-                        </Router>
-                    </Grid>
-                </ThemeProvider>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Footer/>
+                                </Grid>
+                            </Router>
+                        </Grid>
+                    </ThemeProvider>
             </div>
         );
     }

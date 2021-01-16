@@ -1,12 +1,15 @@
 import React from "react";
+
 import TitleContainer from "../shared/TitleContainer";
+import Error from "../shared/Error";
+import {AccountLink, RoleLink} from "../shared/Links";
+import {retrieveProjectInfo} from "../../services/projectService";
+
 import Grid from "@material-ui/core/Grid";
 import {Button, Typography, withStyles} from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Error from "../shared/Error";
-import {retrieveProjectInfo} from "../../services/projectService";
 import Paper from "@material-ui/core/Paper";
-import {AccountLink, RoleLink} from "../shared/Links";
+
 
 const StyledPaper = withStyles({
     root: {

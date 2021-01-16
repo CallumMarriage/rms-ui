@@ -7,19 +7,10 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import {Typography} from "@material-ui/core";
 
 import YourRole from "./YourRole";
-
-import "./Home.css";
 import TitleContainer from "../shared/TitleContainer";
 
-const HomeTitleTyp = withStyles({
-    root: {
-        color: "white",
-        align: 'center',
-        height: '100%',
-        margin: 'auto',
-        marginTop: '8%'
-    }
-})(Typography)
+import "./Home.css";
+
 
 const SecondaryHeaderTyp = withStyles({
     root: {

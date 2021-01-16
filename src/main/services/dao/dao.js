@@ -15,13 +15,13 @@ export async function accessImagePost(endpoint, body) {
 }
 
 async function get(endpoint, host) {
+    console.log(endpoint)
     let res = await fetch(`https://${host}${endpoint}`,
         {
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
         }
     );
-
     if (res.status !== 200) {
         if (res.status === 404) {
             return {

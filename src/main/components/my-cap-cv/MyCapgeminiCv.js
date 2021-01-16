@@ -66,7 +66,7 @@ class MyCapgeminiCv extends React.Component {
             })
         } else {
             this.setState({
-                roleHistory: res.potentialRoles,
+                roleHistory: res.rolehistory,
                 loading: false
             })
         }
@@ -74,6 +74,7 @@ class MyCapgeminiCv extends React.Component {
     }
 
     render() {
+        console.log(this.state.roleHistory)
         return (
             <Grid container>
                 <TitleContainer title={"My Capgemini CV"}/>
@@ -109,9 +110,8 @@ class MyCapgeminiCv extends React.Component {
                                         </Link>
                                         <StyledPaper>
                                             <Typography variant={"subtitle1"}>
-                                                Before you add your role make sure you have the account and project code for
-                                                the
-                                                project that you were on.
+                                                Before you add your role make sure you have the account number for the
+                                                account that you were on.
                                             </Typography>
                                             <div style={{marginTop: '10px'}}>
                                                 <Typography variant={"subtitle2"}>

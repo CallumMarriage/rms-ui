@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import React from "react";
 import {withStyles} from "@material-ui/core";
 import {Link} from "react-router-dom";
+import {AccountLink} from "../shared/Links";
 
 const StyledButton = withStyles({
     root: {
@@ -27,31 +28,38 @@ export default function AccountItem(props) {
     const account = props.account
     return (
         <Grid item lg={4} md={6} xs={12} key={account.accountCode}>
-            <Link style={{textDecoration: 'none'}} to={{
-                pathname: `/Account/${account.accountCode}`,
-                state: {accountNumber: account.accountCode}
-            }}>
-                <StyledPaper>
-
-                    <StyledButton>
-                        <Grid container>
-                            <Grid item xs={12}>
-                                <AccountImage accountNumber={account.accountCode}/>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Typography variant={'body1'} style={
-                                    {
-                                        fontSize: '0.8em',
-                                        position: 'relative',
-                                        bottom: '0px'
-                                    }
-                                }>
-                                    {account.description}
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                    </StyledButton>
-                </StyledPaper>
-            </Link>
+            {
+                AccountLink({
+                    accountNumber: account.accountCode,
+                    accountName: account.accountName,
+                    description: account.description
+                }, AccountPaper)
+            }
         </Grid>)
+}
+
+function AccountPaper(props) {
+    return (
+        <StyledPaper>
+
+            <StyledButton>
+                <Grid container>
+                    <Grid item xs={12}>
+                        <AccountImage accountNumber={props.props.accountNumber}/>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography variant={'body1'} style={
+                            {
+                                fontSize: '0.8em',
+                                position: 'relative',
+                                bottom: '0px'
+                            }
+                        }>
+                            {props.props.description}
+                        </Typography>
+                    </Grid>
+                </Grid>
+            </StyledButton>
+        </StyledPaper>
+    )
 }
