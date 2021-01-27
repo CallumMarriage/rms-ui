@@ -12,7 +12,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 
 import RolesContainer from "./RolesContainer";
 import TitleContainer from "../shared/TitleContainer";
-import {retrievePotentialRoles, retrieveRolesByAccountName} from "../../services/roleService";
+import {findRolesWithFilters, retrievePotentialRoles, retrieveRolesByAccountName} from "../../services/roleService";
 import {getRoleTypes} from "../shared/RoleTypes";
 import Error from "../shared/Error";
 
@@ -28,9 +28,9 @@ class FindRoles extends React.Component {
 
         this.state = {
             potentialRoles: [],
-            roleType: getRoleTypes()[0].value,
-            accountName: null,
-            projectName: null,
+            roleType: getRoleTypes()[getRoleTypes().length -1].value,
+            accountName: '',
+            projectName: '',
             filterActive: false,
             filteredPotentialRoles: [],
             loading: true,
@@ -44,50 +44,48 @@ class FindRoles extends React.Component {
         };
     }
 
-    filter() {
-
-        if (this.state.accountName == null && this.state.projectName == null && this.state.roleType != null) {
-            let filtered = this.searchByRoleType(this.state.roleType);
-            if (filtered > 5) {
-
-            }
-        }
-
+    async filter() {
         let filters = []
 
-        if (this.state.accountName !== null) {
+        this.setState({filterActive: true})
+
+        if (this.state.roleType !== '') {
+            filters.push(`roleType=${this.state.roleType}`)
+        }
+
+        if (this.state.accountName !== '') {
             filters.push(`accountName=${this.state.accountName}`)
         }
 
-        if (this.state.projectName !== null) {
+        if (this.state.projectName !== '') {
             filters.push(`projectName=${this.state.projectName}`)
         }
 
-        if (this.state.roleType !== null) {
-            filters.push(`roleType=${this.state.projectName}`)
+        const response = await findRolesWithFilters(filters);
+
+        if(response.hasError){
+            alert('error running filter')
+        } else {
+            this.setState({
+                filteredPotentialRoles: response.potentialRoles
+            })
         }
+    }
 
-
+    handleChange(event) {
+        this.setState({
+            [event.target.name]: event.target.value
+        })
     }
 
     handleChangeByRoleType(e) {
 
-        this.setAsFiltering();
-
         this.setState({
             roleType: e.target.value,
         })
-
-        this.searchByRoleType(e.target.value)
     }
 
     async handleSearchByAccount(e) {
-        this.setAsFiltering();
-
-        this.setState({
-            accountName: e.target.value,
-        })
-
         await this.searchByAccount(e.target.value)
     }
 
@@ -177,7 +175,7 @@ class FindRoles extends React.Component {
                                        value={this.state.projectName}
                                        type="search"
                                        variant="outlined"
-                                       onChange={this.handleChange}
+                                       onChange={this.handleChange.bind(this)}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -192,7 +190,7 @@ class FindRoles extends React.Component {
                                        value={this.state.accountName}
                                        type="search"
                                        variant="outlined"
-                                       onChange={this.handleSearchByAccount.bind(this)}
+                                       onChange={this.handleChange.bind(this)}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -216,7 +214,7 @@ class FindRoles extends React.Component {
                             </TextField>
                         </Grid>
                         <Button onClick={this.filter.bind(this)}>
-                            Reset Filters
+                            Search
                         </Button>
                         <Button onClick={this.resetFilter.bind(this)}>
                             Reset Filters
@@ -278,7 +276,7 @@ function loadPotentialRolesBox(loading, hasError, potentialRoles, isSearching) {
 
 const mapStateToProps = (state) => {
     return {
-        userId: state.auth.userId,
+        userId: state.user.user.userId,
     };
 }
 

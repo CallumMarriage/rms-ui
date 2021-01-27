@@ -9,7 +9,7 @@ const TitleTyp = withStyles({
         color: "white",
         align: 'center',
         height: '100%',
-        marginTop: '8%'
+        marginTop: '6%'
     }
 })(Typography)
 
@@ -17,7 +17,7 @@ const TitleTyp = withStyles({
 export default function TitleContainer(props) {
 
     return (
-        <div className={"titleContainer"}>
+        <div className={"titleContainer"} style={{height: props.height}}>
             <TitleTyp variant={"h4"}>
                 {props.title}
             </TitleTyp>

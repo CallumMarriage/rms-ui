@@ -42,8 +42,6 @@ const WhiteTypo = withStyles({
 
 
 export default function Role(props) {
-    console.log(props)
-
     return (
         <Paper style={{marginTop: '20px', height: 'fit-content', marginBottom: '50px'}}>
             <ThemeProvider theme={theme}>
@@ -64,7 +62,8 @@ export default function Role(props) {
                                 ProjectLink({
                                         projectCode: props.projectCode,
                                         projectName: props.projectName,
-                                        accountName: props.accountName
+                                        accountName: props.accountName,
+                                        accountNumber: props.accountNumber
                                     },
                                     ProjectButton
                                 )
@@ -83,7 +82,6 @@ export default function Role(props) {
 }
 
 function ProjectButton(props) {
-    console.log(props)
     return (
         <StyledButton>
             <WhiteTypo variant="h5" color="secondary">
@@ -105,7 +103,6 @@ function AccountButton(props) {
 }
 
 function RoleButtonContent(props) {
-    console.log(props.props)
     return (
         <Grid container>
             <StyledButton>
@@ -113,11 +110,6 @@ function RoleButtonContent(props) {
                     <Typography variant="h5">
                         {props.props.roleName}
                     </Typography>
-
-                    <Typography variant="h5">
-                        {props.props.description}
-                    </Typography>
-
                     <Typography variant="h5">
                         {props.props.startDate}
                     </Typography>

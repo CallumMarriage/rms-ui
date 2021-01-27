@@ -12,14 +12,14 @@ import TitleContainer from "../shared/TitleContainer";
 import "./Home.css";
 
 
-const SecondaryHeaderTyp = withStyles({
+const SecondaryHeaderTyp = withStyles((theme) => ({
     root: {
-        color: '#0070AD',
+        color: theme.palette.primary.main,
         padding: '10px',
         fontSize: '1.5em'
 
     }
-})(Typography)
+}))(Typography)
 
 const PrimaryTyp = withStyles({
     root: {
@@ -68,7 +68,7 @@ class Home extends React.Component {
                                 </PrimaryTyp>
                             </Grid>
                         </Grid>
-                        <YourRole userId={this.props.userId}/>
+                        <YourRole userId={this.props.user.id}/>
                     </Paper>
                 </Grid>
             </Grid>
@@ -78,9 +78,8 @@ class Home extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log(state);
     return {
-        userId: state.auth.user.id,
+        user: state.user.user,
     };
 }
 

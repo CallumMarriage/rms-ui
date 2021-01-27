@@ -2,14 +2,13 @@ import React from "react";
 
 import TitleContainer from "../shared/TitleContainer";
 import Error from "../shared/Error";
-import {AccountLink, RoleLink} from "../shared/Links";
 import {retrieveProjectInfo} from "../../services/projectService";
 
 import Grid from "@material-ui/core/Grid";
 import {Button, Typography, withStyles} from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Paper from "@material-ui/core/Paper";
-
+import RolesChart from "./charts/RolesChart";
 
 const StyledPaper = withStyles({
     root: {
@@ -21,7 +20,8 @@ const StyledPaper = withStyles({
 
 const ItemPaper = withStyles({
     root: {
-        marginTop: '20px'
+        marginTop: '20px',
+        width: ''
     }
 })(StyledPaper)
 
@@ -36,6 +36,7 @@ class Project extends React.Component {
 
     constructor(props) {
         super(props);
+
 
         this.state = {
             loading: true,
@@ -56,8 +57,6 @@ class Project extends React.Component {
                 loading: false
             })
         }
-
-        console.log(res);
 
         this.setState({
             hasError: false,
@@ -83,32 +82,25 @@ class Project extends React.Component {
         const project = this.state.project;
         return (
             <Grid container>
-                <TitleContainer title={project.projectName}/>
-                <Grid item xs={6}>
-                    {
-                        AccountLink({
-                            accountName: this.state.accountName,
-                            accountNumber: project.accountNumber
-                        }, AccountItem)
-                    }
-                </Grid>
-                <Grid item xs={6}>
+                <TitleContainer title={project.projectName +  ' at ' + this.state.accountName}/>
+                <Grid item xs={12}>
                     <Grid container>
-                        <StyledPaper>
-                            <Grid item xs={12}>
-                                <Typography variant={"h6"}>
-                                    Open roles for this project
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={12}>
-                                {this.state.roleList.map(role => {
-                                    return (<div key={role.id}>{RoleLink(role, RoleItem)}</div>)
-                                })}
-                            </Grid>
-                        </StyledPaper>
-
+                        <Grid item xs={12}>
+                            {project.description}
+                        </Grid>
                     </Grid>
-
+                </Grid>
+                {/*<Grid item xs={6}>*/}
+                {/*    {*/}
+                {/*        AccountLink({*/}
+                {/*            accountName: this.state.accountName,*/}
+                {/*            accountNumber: project.accountNumber*/}
+                {/*        }, AccountItem)*/}
+                {/*    }*/}
+                {/*</Grid>*/}
+                <Grid item xs={12}>
+                    <RolesChart targetProject={this.state.project}
+                                roleList={this.state.roleList}/>
                 </Grid>
             </Grid>
         )
@@ -117,7 +109,6 @@ class Project extends React.Component {
 }
 
 function AccountItem(props) {
-    console.log(props)
     return (
         <Button>
             {props.props.accountName}

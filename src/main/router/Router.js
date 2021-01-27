@@ -6,8 +6,6 @@ import FindRoles from "../components/find-roles/FindRoles";
 import NotFound from "../components/not-found/NotFound";
 import Grid from "@material-ui/core/Grid";
 import React from "react";
-import Login from "../components/shared/auth/Login";
-import LoginRoute from "./LoginRoute";
 import MyApplications from "../components/my-applications/MyApplications";
 import ViewRole from "../components/pages/ViewRole";
 import Account from "../components/pages/Account";
@@ -16,108 +14,102 @@ import AddNewRole from "../components/my-cap-cv/add-new-role/AddNewRole";
 import SearchAccounts from "../components/search-accounts/SearchAccounts";
 import ProjectManagerSpace from "../components/project-manager-space/ProjectManagerSpace";
 import AddNewAccount from "../components/project-manager-space/add-new-account/AddNewAccount";
-import AddNewProject from "../components/pages/add-new-project/AddNewProject";
+import AddNewProject from "../components/project-manager-space/add-new-project/AddNewProject";
+import SignUp from "../components/login/SignUp";
+import ProjectManagerRoute from "./ProjectManagerRoute";
+import Unauthorised from "../components/not-found/Unauthorised";
+import SignUpRoute from "./SignUpRoute";
+import ResourceManagerRoute from "./ResourceManagerRoute";
+import ViewCandidates from "../components/resource-manager-space/view-candidates/ViewCandidates";
+import Approvals from "../components/resource-manager-space/approvals/Approvals";
+import Candidate from "../components/resource-manager-space/view-candidates/Candidate";
 
-export default function MyRouter(props){
-    return(
+export default function MyRouter(props) {
+    return (
         <Grid item xs={11}>
             <Switch>
-                <LoginRoute exact path="/Login"
-                            component={Login}
-                            appProps={{
-                                isSignedIn:  props.isSignedIn
-                            }}
-                />
-                <EmployeeRoute exact path="/"
-                               component={Home}
+                <SignUpRoute exact path={'/SignUp'}
+                               component={SignUp}
                                appProps={{
-                                   isSignedIn:  props.isSignedIn
-                               }}
-                />
-                {/*<Route exact path="/Login" component={Login}/>*/}
-                <EmployeeRoute exact path="/MyCapgeminiCV"
-                               component={MyCapgeminiCv}
-                               appProps={{
-                                   isSignedIn: props.isSignedIn
-                               }}
-                />
-                <EmployeeRoute exact path="/MeetOurResourceManagers"
-                               component={MyCapgeminiCv}
-                               appProps={{
-                                   isSignedIn: props.isSignedIn
-                               }}
-                />
-
-                <EmployeeRoute exact path="/AddNewRole"
-                               component={AddNewRole}
-                               appProps={{
-                                   isSignedIn: props.isSignedIn
-                               }}
-                />
-
-                <EmployeeRoute exact path="/AddNewAccount"
-                               component={AddNewAccount}
-                               appProps={{
-                                   isSignedIn: props.isSignedIn
-                               }}
-                />
-
-                <EmployeeRoute exact path="/AddNewProject"
-                               component={AddNewProject}
-                               appProps={{
-                                   isSignedIn: props.isSignedIn
-                               }}
-                />
-
-                <EmployeeRoute exact path="/SearchAccounts"
-                               component={SearchAccounts}
-                               appProps={{
-                                   isSignedIn: props.isSignedIn
-                               }}
-                />
-                <EmployeeRoute exact path="/ResourceManager/:id"
-                               component={MyCapgeminiCv}
-                               appProps={{
-                                   isSignedIn: props.isSignedIn
-                               }}
-                />
-                <EmployeeRoute exact path="/FindRoles"
-                               component={FindRoles}
-                               appProps={{
-                                   isSignedIn:  props.isSignedIn
+                                   isSignedIn: props.isSignedIn,
+                                   userExists: props.userExists
                                }}/>
-                <EmployeeRoute exact path="/MyApplications"
-                               component={MyApplications}
-                               appProps={{
-                                   isSignedIn:  props.isSignedIn
-                               }}/>
+                { createEmployeeRoute("/", props, Home) }
 
-                <EmployeeRoute path="/Account/:accountId/Project/:projectId/ViewRole/:id"
-                               component={ViewRole}
-                               appProps={{
-                                   isSignedIn:  props.isSignedIn
-                               }}/>
+                { createEmployeeRoute("/SignUp", props, Home)}
+                { createEmployeeRoute("/MyCapgeminiCV", props, MyCapgeminiCv) }
+                { createEmployeeRoute("/MeetOurResourceManagers", props, MyCapgeminiCv) }
+                { createEmployeeRoute("/AddNewRole", props, AddNewRole) }
+                { createEmployeeRoute("/SearchAccounts", props, SearchAccounts) }
+                { createEmployeeRoute("/ResourceManager/:id", props, MyCapgeminiCv) }
 
-                <EmployeeRoute path="/Account/:accountId/Project/:projectId"
-                               component={Project}
-                               appProps={{
-                                   isSignedIn:  props.isSignedIn
-                               }}/>
+                { createEmployeeRoute("/Applications/FindRoles", props, FindRoles) }
+                { createEmployeeRoute("/Applications/MyApplications", props, MyApplications) }
 
-                <EmployeeRoute path="/Account/:accountId"
-                               component={Account}
-                               appProps={{
-                                   isSignedIn:  props.isSignedIn
-                               }}/>
+                { createEmployeeRoute("/Account/:accountId/Project/:projectId/ViewRole/:id", props,  ViewRole ) }
+                { createEmployeeRoute("/Account/:accountId/Project/:projectId", props, Project) }
+                { createEmployeeRoute("/Account/:accountId", props, Account) }
 
+                { createResourceManagerRoute("/ResourceManagement/Approvals", props, Approvals)}
+                { createResourceManagerRoute("/ResourceManagement/ViewCandidates", props, ViewCandidates)}
 
-                {/*<EmployeeRoute exact path="/AccountDirectorSpace" component={AccountDirectorSpace}/>*/}
-                <EmployeeRoute exact path="/ProjectManagement"
-                               component={ProjectManagerSpace}
+                { createResourceManagerRoute("/ViewCandidates/Candidate/:candidateId", props,
+                    Candidate)}
 
-                />
+                { createProjectManagerRoute("/ProjectManagement", props, ProjectManagerSpace) }
+                { createEmployeeRoute("/ProjectManagement/AddNewAccount", props, AddNewAccount) }
+                { createEmployeeRoute("/ProjectManagement/AddNewProject", props, AddNewProject) }
+                <Route path="/Unauthorised" exact={true} component={Unauthorised}/>
                 <Route path="*" exact={true} component={NotFound}/>
             </Switch>
         </Grid>
+    )
+}
+
+function createProjectManagerRoute(path, props, component) {
+
+    let userType = null;
+    if(props.user !== undefined && props.user !== null ){
+        userType = props.user.userType;
+    }
+
+    return (
+        <ProjectManagerRoute exact path={path}
+                             component={component}
+                             appProps={{
+                                 isSignedIn: props.isSignedIn,
+                                 userExists: props.userExists,
+                                 userType: userType
+                             }}/>
+    )
+}
+
+function createResourceManagerRoute(path, props, component) {
+
+    let userType = null;
+    if(props.user !== undefined && props.user !== null ){
+        userType = props.user.userType;
+    }
+
+    return (
+        <ResourceManagerRoute exact path={path}
+                             component={component}
+                             appProps={{
+                                 isSignedIn: props.isSignedIn,
+                                 userExists: props.userExists,
+                                 userType: userType
+                             }}/>
+    )
+}
+
+function createEmployeeRoute(path, props, component) {
+
+    return (
+        <EmployeeRoute exact path={path}
+                       component={component}
+                       appProps={{
+                           isSignedIn: props.isSignedIn,
+                           userExists: props.userExists
+                       }}/>
     )
 }

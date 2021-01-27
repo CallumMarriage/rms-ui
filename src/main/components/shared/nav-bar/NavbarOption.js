@@ -11,7 +11,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 const useStyles = makeStyles((theme) => ({
     button: {
         textAlign: 'center',
-        color: theme.palette.text.secondary,
+        color: theme.palette.secondary.main,
         width: '100%',
         minHeight: '50px',
         height: 'fit-content',
@@ -21,14 +21,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const CapgeminiBlueTypography = withStyles({
+const CapgeminiBlueTypography = withStyles((theme) => ({
     root: {
-        color: "white",
+        color: theme.palette.secondary.main,
         display: "initial",
         fontSize: 14,
         textTransform: 'none'
     }
-})(Typography);
+}))(Typography);
 
 function conditionalRenderNumber(number, loading) {
     if (number === undefined) {

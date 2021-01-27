@@ -4,35 +4,24 @@ import TitleContainer from "../../shared/TitleContainer";
 import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import TextField from "@material-ui/core/TextField";
-import Paper from "@material-ui/core/Paper";
 import {Typography, withStyles} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import MyDatePicker from "./MyDatePicker";
-import Redirect from "react-router-dom/es/Redirect";
 import {addNewProject} from "../../../services/projectService";
+import {StyledPaper} from "../../shared/SharedStyledItems";
+import {Redirect} from "react-router-dom";
 
-const StyledPaper = withStyles({
-    root: {
-        marginBottom: '50px',
-        width: '90%',
-        paddingRight: '10%',
-        paddingLeft: '10%',
-        paddingBottom: '20px',
-        paddingTop: '20px'
 
-    }
-})(Paper)
-
-const StyledButton = withStyles({
+const StyledButton = withStyles((theme) => ({
     root: {
         width: '80%',
         height: '60px',
         color: 'white',
-        backgroundColor: '#0070AD',
+        backgroundColor: theme.palette.primary.main,
         position: 'relative',
         bottom: '0'
     }
-})(Button);
+}))(Button);
 
 
 class AddNewProject extends React.Component {
@@ -48,7 +37,8 @@ class AddNewProject extends React.Component {
             accountNumber: props.location.state.accountNumber,
             hasError: false,
             completed: false,
-            added: false
+            added: false,
+            userId: props.location.state.userId
         };
     }
 
@@ -80,7 +70,6 @@ class AddNewProject extends React.Component {
 
 
     async submit() {
-        console.log(this.state)
         const res = await addNewProject(this.state)
 
         if (res !== undefined && res.hasError) {

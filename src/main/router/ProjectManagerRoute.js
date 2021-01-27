@@ -1,16 +1,21 @@
 import React from 'react';
-import {Route, Redirect} from 'react-router-dom';
+import {Redirect, Route} from 'react-router-dom';
 
-export default function ProjectManagerRoute({ component: C, appProps, ...rest }) {
+function ProjectManagerRoute({ component: C, appProps, ...rest }) {
+    console.log(appProps)
     return (
         <Route
             {...rest}
-            render={props =>
-                 appProps.isSignedIn && (appProps.accountManager || appProps.projectManager)
-                    ? <C {...props} {...appProps} />
-                    : <Redirect
-                        to={`/notFound?redirect=${props.location.pathname}${props.location.search}`}
-                    />}
+            render={props => !appProps.isSignUpRoute && !appProps.userExists ?
+                <Redirect to={{ pathname: "/SignUp", state: { from: appProps.location} }}/>
+                : appProps.userType === 'PROJECT_MANAGER' ?
+                <C {...props} {...appProps} /> :
+                    <Redirect to={{ pathname: "/Unauthorised", state: { from: appProps.location} }}/>
+
+
+            }
         />
     );
 }
+
+export default ProjectManagerRoute;

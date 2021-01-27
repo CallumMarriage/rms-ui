@@ -1,5 +1,4 @@
 import React from "react";
-import Grid from "@material-ui/core/Grid";
 import NavbarOption from "./NavbarOption";
 import Paper from "@material-ui/core/Paper";
 import HomeIcon from '@material-ui/icons/Home';
@@ -11,6 +10,9 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import {retrieveNumOfApplications} from "../../../services/applicationService";
 import SearchIcon from '@material-ui/icons/Search';
 import BusinessIcon from '@material-ui/icons/Business';
+import Divider from "@material-ui/core/Divider";
+import PeopleIcon from '@material-ui/icons/People';
+import DoneAllIcon from '@material-ui/icons/DoneAll';
 
 const styles = theme => ({
     root: {
@@ -41,7 +43,7 @@ class Navbar extends React.Component {
 
 
     async componentDidMount() {
-        if(this.props.user == null){
+        if (this.props.user == null) {
             return;
         }
 
@@ -57,37 +59,59 @@ class Navbar extends React.Component {
     render() {
 
         const numOfApps = this.state.numOfApps
-        if(this.props.isSignedIn){
+
+        if (this.props.isSignedIn) {
             return (
                 <Paper className={this.props.classes.paper}>
-                    <Grid container spacing={2}>
-                        <NavbarOption link={"/"}
-                                      icon={HomeIcon}
-                                      title={"Home Page"}/>
+                    <NavbarOption link={"/"}
+                                  icon={HomeIcon}
+                                  title={"Home Page"}/>
+                    <Divider/>
+                    <NavbarOption link="/MyCapgeminiCV"
+                                  icon={ViewListIcon}
+                                  title={"My Capgemini CV"}/>
+                    <Divider/>
+                    <NavbarOption link="/Applications/FindRoles"
+                                  icon={LocalGroceryStore}
+                                  title={"Find a new Role"}/>
+                    <Divider/>
+                    <NavbarOption link="/SearchAccounts"
+                                  icon={SearchIcon}
+                                  title={"Search Accounts"}/>
 
-                        <NavbarOption link="/MyCapgeminiCV"
-                                      icon={ViewListIcon}
-                                      title={"My Capgemini CV"}/>
+                    {
+                        RenderProjectManagementComponent(
+                            "/ProjectManagement",
+                            BusinessIcon,
+                            "Manage Projects", this.props.user.userType
+                        )
+                    }
+                    {
+                        RenderResourceManagerComponent(
+                            "/ResourceManagement/ViewCandidates",
+                            PeopleIcon,
+                            "View Candidates",
+                            this.props.user.userType
+                        )
+                    }
 
-                        <NavbarOption link="/FindRoles"
-                                      icon={LocalGroceryStore}
-                                      title={"Find a new Role"}/>
+                    {
+                        RenderResourceManagerComponent(
+                            "/ResourceManagement/Approvals",
+                            DoneAllIcon,
+                            "Approvals",
+                            this.props.user.userType
+                        )
+                    }
 
-                        <NavbarOption link="/SearchAccounts"
-                                      icon={SearchIcon}
-                                      title={"Search Accounts"}/>
+                    <Divider/>
+                    <NavbarOption link="/Applications/MyApplications"
+                                  icon={EmailIcon}
+                                  title={"My Applications"}
+                                  number={numOfApps}
+                                  loading={this.state.loading}/>
+                    <Divider/>
 
-                        <NavbarOption link="/ProjectManagement"
-                                      icon={BusinessIcon}
-                                      title={"Manage Projects"}/>
-
-                        <NavbarOption link="/MyApplications"
-                                      icon={EmailIcon}
-                                      title={"My Applications"}
-                                      number={numOfApps}
-                                      loading={this.state.loading}/>
-
-                    </Grid>
                 </Paper>
             )
         } else {
@@ -98,10 +122,40 @@ class Navbar extends React.Component {
     }
 }
 
+function RenderProjectManagementComponent(link, icon, title, userType) {
+    if (userType === 'PROJECT_MANAGER') {
+        return (
+            <div>
+                <Divider />
+                <NavbarOption link={link}
+                              icon={icon}
+                              title={title}/>
+            </div>
+        )
+    } else {
+        return null;
+    }
+}
+
+function RenderResourceManagerComponent(link, icon, title, userType,) {
+    if (userType === 'RESOURCE_MANAGER') {
+        return (
+            <div>
+                <Divider />
+                <NavbarOption link={link}
+                              icon={icon}
+                              title={title}/>
+            </div>
+        )
+    } else {
+        return null;
+    }
+}
+
 const mapStateToProps = (state) => {
     return {
-        user: state.auth.user,
-        isSignedIn: state.auth.isSignedIn
+        user: state.user.user,
+        isSignedIn: state.auth.isSignedIn,
     };
 }
 

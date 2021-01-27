@@ -8,8 +8,8 @@ import Paper from "@material-ui/core/Paper";
 import {Typography, withStyles} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import MyDatePicker from "./MyDatePicker";
-import Redirect from "react-router-dom/es/Redirect";
 import {addNewAccount} from "../../../services/accountService";
+import { Redirect }  from "react-router-dom";
 
 const StyledPaper = withStyles({
     root: {
@@ -86,7 +86,6 @@ class AddNewAccount extends React.Component {
 
 
     async submit() {
-        console.log(this.state)
         const res = await addNewAccount(this.state)
 
         if (res !== undefined && res.hasError) {

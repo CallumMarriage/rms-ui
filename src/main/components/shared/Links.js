@@ -2,7 +2,6 @@ import {Link} from "react-router-dom";
 import React from "react";
 
 export function AccountLink(props, Content) {
-    console.log(props);
     return (
         <Link style={{textDecoration: 'none'}} to={{
             pathname: `/Account/${props.accountNumber}`,

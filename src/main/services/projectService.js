@@ -5,21 +5,48 @@ import {error} from "./model/error";
 
 export async function retrieveProjectInfo(projectCode) {
 
-    console.log('Making request to Project API')
+    try{
+        return await handleGet(`/projects/id/${projectCode}`)
+    } catch (e){
+        return error;
+    }
+}
 
-    return await handleGet(`/projects/id/${projectCode}`)
+export async function retrieveAccountsAndProjectsForPm(projectManagerId) {
+
+    try{
+        const res = await handleGet(`/accounts/projects?projectManagerId=${projectManagerId}`)
+        if (res.accountAndProjectsList === undefined) {
+            return {
+                accountAndProjectsList: []
+            }
+        }
+
+        return res;
+
+    } catch (e){
+        return error;
+    }
+}
+
+
+export async function retrieveProjectsForProjectManager(projectManagerId){
+    try{
+        return await handleGet(`/projects?projectManagerId=${projectManagerId}`)
+    } catch (e){
+        return error;
+    }
 }
 
 export async function addNewProject(state){
-    console.log("Making request to add new Project");
-
     const body = {
         startDate: state.startDate,
         endDate: state.endDate,
         accountNumber: state.accountNumber,
         projectCode: state.projectCode,
         projectName: state.projectName,
-        description: state.description
+        description: state.description,
+        projectManagerId: state.userId
     }
 
     try {

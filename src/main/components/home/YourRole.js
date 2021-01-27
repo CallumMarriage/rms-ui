@@ -2,8 +2,6 @@ import React from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 
-import {retrieveResourceManagerName} from "../../services/userService";
-
 import Grid from "@material-ui/core/Grid";
 import {Typography} from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
@@ -70,31 +68,21 @@ const SecondaryHeaderTyp = withStyles({
 class YourRole extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            currentRole: null,
-            currentAccount: null,
-            currentProject: null,
-            currentResourceManager: null
-        };
     }
 
     async componentDidMount() {
-        console.log(this.props.user)
-        if (this.props.user.resourceManagerId == null) {
-            return;
-        }
 
-        const response = await retrieveResourceManagerName(
-            this.props.user.resourceManagerId);
-
-        if (response.hasError) {
-            return
-        }
-
-        this.setState({
-            currentResourceManager: response.id
-        })
+        //
+        // const response = await retrieveResourceManagerName(
+        //     this.props.user.resourceManagerId);
+        //
+        // if (response.hasError) {
+        //     return
+        // }
+        //
+        // this.setState({
+        //     currentResourceManager: response.id
+        // })
     }
 
     render() {
@@ -107,13 +95,13 @@ class YourRole extends React.Component {
                 <SecondaryHeaderTyp>
                     Here you can find out all your current information
                 </SecondaryHeaderTyp>
-                {returnInfo(project, account, role, this.state.currentResourceManager)}
+                {returnInfo(project, account, role)}
             </Paper>
         )
     }
 }
 
-function returnInfo(project, account, role, resourceManager) {
+function returnInfo(project, account, role) {
 
     if (role === null || role === undefined) {
         return (
@@ -196,7 +184,6 @@ function RoleButton(props) {
 }
 
 function AccountButton(props) {
-    console.log(props)
     let message = 'Current Account: ' + props.props.accountNumber
     return (
         <div>
@@ -233,10 +220,10 @@ function LinkButton(content) {
 
 const mapStateToProps = (state) => {
     return {
-        user: state.auth.user,
-        currentRole: state.auth.currentRole,
-        currentAccount: state.auth.currentAccount,
-        currentProject: state.auth.currentProject
+        user: state.user.user,
+        currentRole: state.user.currentRole,
+        currentAccount: state.user.currentAccount,
+        currentProject: state.user.currentProject
     };
 }
 

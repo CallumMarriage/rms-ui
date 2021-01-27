@@ -3,7 +3,6 @@ import Paper from "@material-ui/core/Paper";
 import {makeStyles} from "@material-ui/core/styles";
 
 import logo from '../../../images/Capgemini-RMS-logo-latest.png';
-import GoogleAuth from "../auth/GoogleAuth"; // Tell webpack this JS file uses this image
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -16,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Header(props){
+export default function Header(){
     const classes = useStyles();
 
     return (
@@ -24,7 +23,6 @@ export default function Header(props){
             <span>
                 <img src={logo} alt="Logo" style={{ "width": "280px", "height": "60px"}}/>
             </span>
-            <GoogleAuth/>
         </Paper>
 
     )

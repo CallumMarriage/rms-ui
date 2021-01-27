@@ -6,11 +6,13 @@ function EmployeeRoute({ component: C, appProps, ...rest }) {
     return (
         <Route
             {...rest}
-            render={props => rest.isSignedIn
-                    ? <C {...props} {...appProps} />
-                    : <Redirect
-                        to={`/Login?redirect=${props.location.pathname}${props.location.search}`}
-                    />}
+            render={props => appProps.isSignedIn?
+                 !appProps.userExists ?
+                <Redirect to={{ pathname: "/SignUp", state: { from: appProps.location} }}/>
+                :
+                <C {...props} {...appProps} />:
+                <Redirect to={{ pathname: "/Login", state: { from: appProps.location} }}/>
+            }
         />
     );
 }

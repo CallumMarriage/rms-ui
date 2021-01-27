@@ -1,15 +1,21 @@
 import React from 'react';
 import {Route, Redirect} from 'react-router-dom';
+import {connect} from "react-redux";
 
-export default function LoginRoute({ component: C, appProps, ...rest }) {
+function LoginRoute({component: C, appProps, ...rest}) {
     return (
         <Route
             {...rest}
-            render={props => !appProps.isSignedIn
-                ? <C {...props} {...appProps} />
-                : <Redirect
-                    to={`/?redirect=${props.location.pathname}${props.location.search}`}
-                />}
+            render={props => !rest.isSignedIn ? <C {...props} {...appProps} />
+                : <Redirect to={{pathname: "/", state: {from: appProps.location}}}/>
+            }
         />
     );
 }
+
+const mapStateToProps = state => ({
+    isSignedIn: state.auth.isSignedIn,
+    userExists: state.userExists
+});
+
+export default connect(mapStateToProps)(LoginRoute);

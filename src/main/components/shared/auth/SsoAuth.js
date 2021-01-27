@@ -2,12 +2,13 @@ import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 
-import {signIn, signOut} from "../../../actions";
 import Button from "@material-ui/core/Button";
-import {retrieveRoleInfo} from "../../../services/roleService";
-import {handleInternalLogin} from "../../../services/userService";
+import {signIn, signOut} from "../../../actions/sso";
+import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
+import {Typography} from "@material-ui/core";
 
-class GoogleAuth extends Component {
+class SsoAuth extends Component {
     // reference to state has been removed
 
     componentDidMount() {
@@ -29,60 +30,47 @@ class GoogleAuth extends Component {
         });
     }
 
-    onAuthChange = async (auth, isSignedIn) => {
+    onAuthChange = (auth, isSignedIn) => {
         if (isSignedIn) {
-            const googleId = auth.currentUser.get().getBasicProfile().getId();
+            const ssoId = auth.currentUser.get()
+                .getBasicProfile()
+                .getId();
 
-            let userDetails = await this.retrieveUserDetails(googleId);
-
-            if(userDetails === undefined){
-                userDetails = await handleInternalLogin(googleId);
-                if(userDetails === undefined){
-                    return;
-                }
-            }
-
-
-
-            this.props.signIn(
-                userDetails.user,
-                userDetails.currentRole,
-                userDetails.currentAccount,
-                userDetails.currentProject);
+            this.props.signIn(ssoId);
         } else {
             this.props.signOut();
         }
     };
 
     onSignInClick = async () => {
-        this.auth.signIn();
+        await this.auth.signIn();
+        this.onAuthChange(this.auth, true)
     }
 
     onSignOutClick = () => {
         this.auth.signOut();
+        this.props.signOut();
     };
 
-    async retrieveUserDetails(googleId) {
-        let userInfo = await retrieveRoleInfo(googleId);
-
-        if(userInfo.hasError){
-            return;
-        }
-
-        const user = userInfo.user;
-        const currentProject = userInfo.currentProject;
-        const currentAccount = userInfo.currentAccount;
-        const currentRole = userInfo.currentRole;
-        return {user, currentProject, currentAccount, currentRole}
-    }
-
-    // helper function
     renderAuthButton() {
-        if (this.props.isSignedIn === null || !this.props.isSignedIn) {
+        if (this.props.isSignedIn === null) {
+            return null;
+        } else if( !this.props.isSignedIn) {
             return (
-                <button onClick={this.onSignInClick}>
-                    Sign In
-                </button>
+                <Grid container>
+                    <Grid item xs={2}>
+                    </Grid>
+                    <Grid item xs={9}>
+                        <Paper style={{margin: 'auto'}}>
+                            <Typography variant={'h6'}>
+                                Log in using SSO
+                            </Typography>
+                            <Button onClick={this.onSignInClick}>
+                                Sign In
+                            </Button>
+                        </Paper>
+                    </Grid>
+                </Grid>
             );
         } else if (this.props.isSignedIn) {
             return (
@@ -109,4 +97,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, {signIn, signOut})(GoogleAuth);
+export default connect(mapStateToProps, {signIn, signOut})(SsoAuth);

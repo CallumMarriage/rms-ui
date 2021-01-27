@@ -18,7 +18,7 @@ import ErrorIcon from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import {retrieveAccountInfo} from "../../../services/accountService";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Redirect from "react-router-dom/es/Redirect";
+import {Redirect} from "react-router-dom";
 
 const StyledPaper = withStyles({
     root: {
@@ -43,6 +43,14 @@ const StyledButton = withStyles({
     }
 })(Button);
 
+const ExitButton = withStyles({
+    root: {
+        width: '100px',
+        height: '50px',
+        fontSize: '1em',
+    }
+})(Button);
+
 
 class AddNewRole extends React.Component {
     constructor(props) {
@@ -51,12 +59,12 @@ class AddNewRole extends React.Component {
         this.state = {
             startDate: new Date(),
             endDate: null,
-            roleName: null,
-            roleDescription: null,
+            roleName: '',
+            roleDescription: '',
             roleType: getRoleTypes()[0].value,
             project: null,
             potentialProjects: [],
-            accountName: null,
+            accountName: '',
             accountNumber: null,
             loadingAccountVerification: false,
             hasError: false,
@@ -68,7 +76,6 @@ class AddNewRole extends React.Component {
     }
 
     handleChange = (event) => {
-        console.log(event.target.id)
         this.setState({
             [event.target.id]: event.target.value
         })
@@ -166,7 +173,6 @@ class AddNewRole extends React.Component {
     }
 
     async submit() {
-        console.log(this.state);
         const res = await addNewRole(this.props.userId, this.state)
 
         if (res !== undefined && res.hasError) {
@@ -197,9 +203,18 @@ class AddNewRole extends React.Component {
 
                         <Grid container>
                             <Grid item xs={12}>
-                                <Typography variant={"h6"}>
-                                    Add your role details
-                                </Typography>
+                                <Grid container>
+                                    <Grid item xs={3}>
+                                        <ExitButton onClick={this.props.history.goBack}>
+                                            Cancel
+                                        </ExitButton>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <Typography variant={"h6"}>
+                                            Add your role details
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
                             </Grid>
                             <Grid item lg={6} xs={12}>
                                 <Grid container>
@@ -367,7 +382,7 @@ function renderEndDate(currentRole, endDate, handleChange) {
 
 const mapStateToProps = (state) => {
     return {
-        userId: state.auth.user.id,
+        userId: state.user.user.id,
     };
 }
 

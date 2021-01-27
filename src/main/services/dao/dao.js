@@ -15,7 +15,6 @@ export async function accessImagePost(endpoint, body) {
 }
 
 async function get(endpoint, host) {
-    console.log(endpoint)
     let res = await fetch(`https://${host}${endpoint}`,
         {
             method: 'GET',
@@ -24,9 +23,7 @@ async function get(endpoint, host) {
     );
     if (res.status !== 200) {
         if (res.status === 404) {
-            return {
-                responseBody: {}
-            }
+            return {}
         } else {
             throw new Error('Internal Server Error');
         }
@@ -45,7 +42,7 @@ async function post(endpoint, body, host) {
     );
 
     if (res.status !== 201 && res.status !== 202) {
-        console.log(res)
         throw new Error('Internal Server Error');
     }
+    return res.json();
 }

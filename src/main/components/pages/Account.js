@@ -12,6 +12,7 @@ import Error from "../shared/Error";
 import TitleContainer from "../shared/TitleContainer";
 import {ProjectLink} from "../shared/Links";
 import {Link} from "react-router-dom";
+import {connect} from "react-redux";
 
 const StyledPaper = withStyles({
     root: {
@@ -61,8 +62,6 @@ class Account extends React.Component {
             })
         }
 
-        console.log(res);
-
         this.setState({
             hasError: false,
             loading: false,
@@ -101,8 +100,6 @@ class Account extends React.Component {
         const uploaded = await uploadImageFile(
             this.state.accountNumber,
             this.state.fileToUpload)
-
-        console.log(uploaded)
 
         if (uploaded === undefined) {
             this.setState({
@@ -189,6 +186,7 @@ class Account extends React.Component {
                                     </Typography>
                                 </Grid>
                                 {this.state.projectList.map(project => {
+                                    project.accountName = this.state.account.accountName
                                     return (
                                         <Grid item xs={12} key={project.projectCode}>
                                             {
@@ -200,7 +198,7 @@ class Account extends React.Component {
                                 <Grid item xs={12}>
                                     <Link style={{textDecoration: 'none'}} to={{
                                         pathname: `/AddNewProject`,
-                                        state: {accountNumber: this.state.accountNumber}
+                                        state: {accountNumber: this.state.accountNumber, userId: this.props.userId}
                                     }}>
                                         <Button>
                                             <Typography variant={"h6"}>
@@ -220,7 +218,6 @@ class Account extends React.Component {
 }
 
 function ProjectItem(props) {
-    console.log(props)
     return (
         <ItemPaper key={props.props.projectCode}>
             <StyledButton>
@@ -232,4 +229,12 @@ function ProjectItem(props) {
     )
 }
 
-export default Account;
+
+const mapStateToProps = (state) => {
+    return {
+        userId: state.user.user.id,
+    };
+}
+
+
+export default connect(mapStateToProps)(Account);

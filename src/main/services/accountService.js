@@ -20,23 +20,27 @@ export async function addNewAccount(state) {
 }
 
 export async function retrieveAccountInfo(accountNumber) {
-    return await handleGet(`/account/id/${accountNumber}`)
+    try {
+        return await handleGet(`/account/id/${accountNumber}`)
+    } catch (e){
+        return error;
+    }
 }
+
+
 
 export async function retrieveAllAccounts() {
     try {
         console.log('Making request to Accounts API')
         let res = await accessApiGet(`/accounts`)
 
-        console.log(res);
-
-        if (res.responseBody.accountList === undefined) {
+        if (res.accountList === undefined) {
             return {
                 roleHistory: []
             }
         }
 
-        return res.responseBody;
+        return res;
 
     } catch (e) {
         return error;

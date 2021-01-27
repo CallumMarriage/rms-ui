@@ -2,13 +2,9 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import TitleContainer from "../shared/TitleContainer";
 import Paper from "@material-ui/core/Paper";
-import Application from "../my-applications/Application";
 import {retrieveAllAccounts} from "../../services/accountService";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Error from "../shared/Error";
-import AccountImage from "../pages/AccountImage";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import AccountItem from "./AccountItem";
 import TextField from "@material-ui/core/TextField";
 
@@ -22,7 +18,7 @@ class SearchAccounts extends React.Component {
             filteredAccountList: null,
             loading: true,
             hasError: false,
-            searchItem: null
+            searchItem: ''
         }
     }
 
@@ -31,8 +27,6 @@ class SearchAccounts extends React.Component {
             loading: true
         })
         const res = await retrieveAllAccounts();
-
-        console.log(res);
 
         if (res.hasError) {
             this.setState({

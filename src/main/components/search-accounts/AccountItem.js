@@ -5,7 +5,6 @@ import AccountImage from "../pages/AccountImage";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
 import {withStyles} from "@material-ui/core";
-import {Link} from "react-router-dom";
 import {AccountLink} from "../shared/Links";
 
 const StyledButton = withStyles({

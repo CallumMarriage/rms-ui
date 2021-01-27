@@ -6,14 +6,13 @@ export async function retrieveRoleHistory(id) {
         console.log('Making request to Role API')
         let res = await accessApiGet(`/roles?userId=${id}`);
 
-        console.log(res);
-        if (res.responseBody.rolehistory === undefined) {
+        if (res.rolehistory === undefined) {
             return {
                 roleHistory: []
             }
         }
 
-        return res.responseBody;
+        return res;
 
     } catch (e) {
         return error;

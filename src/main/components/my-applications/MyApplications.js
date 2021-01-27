@@ -10,7 +10,6 @@ import TitleContainer from "../shared/TitleContainer";
 import Grid from "@material-ui/core/Grid";
 import {Typography} from "@material-ui/core";
 import TableCell from "@material-ui/core/TableCell";
-import makeStyles from "@material-ui/core/styles/makeStyles";
 import TableContainer from "@material-ui/core/TableContainer";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
@@ -170,7 +169,7 @@ function RoleItem(props) {
 
 const mapStateToProps = (state) => {
     return {
-        user: state.auth.user,
+        user: state.user.user,
     };
 }
 

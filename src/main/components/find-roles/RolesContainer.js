@@ -15,7 +15,6 @@ export default function RolesContainer (props) {
                               accountName={role.accountName}
                               accountNumber={role.accountNumber}
                               roleName={role.roleName}
-                              description={role.description}
                               startDate={role.startDate}
                               endDate={role.endDate}
                               key={role.id}

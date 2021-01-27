@@ -53,7 +53,6 @@ class MyCapgeminiCv extends React.Component {
 
     async componentDidMount() {
         const userId = this.props.userId;
-        console.log(userId);
         const res = await retrieveRoleHistory(userId);
         if (res == null) {
             this.setState({
@@ -74,7 +73,6 @@ class MyCapgeminiCv extends React.Component {
     }
 
     render() {
-        console.log(this.state.roleHistory)
         return (
             <Grid container>
                 <TitleContainer title={"My Capgemini CV"}/>
@@ -180,9 +178,8 @@ function renderRoleHistory(loading, hasError, roleHistory) {
 
 
 const mapStateToProps = (state) => {
-    console.log(state)
     return {
-        userId: state.auth.user.id,
+        userId: state.user.user.id,
     };
 }
 

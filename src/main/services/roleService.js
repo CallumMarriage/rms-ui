@@ -1,6 +1,40 @@
 import { error } from "./model/error";
 import {accessApiGet, accessApiPost} from "./dao/dao";
 
+export async function findRolesWithFilters(filters){
+    try {
+        let endpoint = '/roles?'
+        let i = 0;
+        filters.forEach( filter => {
+            if(i >= 1){
+                endpoint = endpoint + '&' + filter;
+            } else {
+                endpoint = endpoint + filter;
+            }
+            i++;
+        })
+
+        const res = await accessApiGet(endpoint);
+
+        return res;
+
+    } catch (e) {
+        return error;
+    }
+}
+
+export async function isRoleOpen(roleId){
+    try {
+        console.log('Making request to Role API')
+
+        const res = await accessApiGet(`/role/isRoleOpen?roleId=${roleId}`);
+
+        return res;
+    } catch (e) {
+        return error;
+    }
+}
+
 export async function addNewRole(userId, state){
     console.log("Making request to add new Role");
     const body = {
@@ -25,25 +59,25 @@ export async function addNewRole(userId, state){
     }
 }
 
-export async function retrieveRoleInfo(id) {
-    try {
-        console.log('Making request to Role API')
-
-        const res = await accessApiGet(`/user/info?googleId=${id}`);
-
-        return res.responseBody;
-    } catch (e) {
-        return error;
-    }
-}
-
 export async function retrieveRole(roleId) {
     try {
         console.log('Making request to Role API')
 
         const res = await accessApiGet(`/role/id/${roleId}`);
 
-        return res.responseBody;
+        return res;
+    } catch (e) {
+        return error;
+    }
+}
+
+export async function retrieveNewRoleRequestsForRm(rmId) {
+    try {
+        console.log('Making request to Role API')
+
+        const res = await accessApiGet(`/role/newRequests?rmId=${rmId}`);
+
+        return res;
     } catch (e) {
         return error;
     }
@@ -55,13 +89,13 @@ export async function retrieveRolesByAccountName(accountName) {
 
         const res = await accessApiGet(`roles?roleType=${accountName}`)
 
-        if (res.responseBody.potentialRoles === undefined) {
+        if (res.potentialRoles === undefined) {
             return {
                 potentialRoles: []
             }
         }
 
-        return res.responseBody;
+        return res;
     } catch (e) {
         return error;
     }
@@ -73,13 +107,13 @@ export async function retrieveRolesByRoleType(roleType) {
 
         const res = await accessApiGet(`/roles?roleType=${roleType}`);
 
-        if (res.responseBody.potentialRoles === undefined) {
+        if (res.potentialRoles === undefined) {
             return {
                 potentialRoles: []
             }
         }
 
-        return res.responseBody;
+        return res;
 
     } catch (e) {
         return error;
@@ -92,13 +126,13 @@ export async function retrievePotentialRoles() {
 
         const res = await accessApiGet(`/roles`);
 
-        if (res.responseBody.potentialRoles === undefined) {
+        if (res.potentialRoles === undefined) {
             return {
                 potentialRoles: []
             }
         }
 
-        return res.responseBody;
+        return res;
     } catch (e) {
         return error;
     }
